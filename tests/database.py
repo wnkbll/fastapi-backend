@@ -3,7 +3,7 @@ import asyncio
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 
-from app.models.alchemy import Model, User
+from app.models.alchemy import Model, UserModel
 from app.db.repositories import UsersRepository
 
 DATABASE_DIALECT = "postgresql"
@@ -29,8 +29,8 @@ async def main():
 
     await init_models(engine)
 
-    bob = User(name="Bob", age=42, passport="001")
-    sam = User(name="Sam", age=25, passport="002")
+    bob = UserModel(name="Bob", age=42, passport="001")
+    sam = UserModel(name="Sam", age=25, passport="002")
 
     users_repository = UsersRepository(session)
 
@@ -42,7 +42,7 @@ async def main():
         print(f"id: {user.id}; name: {user.name}; age: {user.age}; passport: {user.passport}")
     print("---------------------------")
 
-    await users_repository.update(2, User(name="Alice", age=18, passport="003"))
+    await users_repository.update(2, UserModel(name="Alice", age=18, passport="003"))
 
     users = await users_repository.get_all()
     for user in users:

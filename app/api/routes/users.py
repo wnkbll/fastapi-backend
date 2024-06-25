@@ -14,4 +14,4 @@ user_repository: UsersRepository = UsersRepository(session)
 @router.get("/users/{user_id}")
 async def get_user(user_id: int):
     user = await user_repository.get(user_id)
-    return {"id": user.id, "name": user.name, "age": user.age, "passport": user.passport}
+    return user
