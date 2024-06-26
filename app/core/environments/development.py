@@ -2,7 +2,7 @@ from dotenv import dotenv_values
 from pydantic import PostgresDsn
 from dataclasses import dataclass
 
-from app.core.environments import Environment, EnvironmentTypes
+from app.core.environments.environment import Environment, EnvironmentTypes
 
 
 class DevelopmentEnvironment(Environment):
@@ -23,5 +23,5 @@ class DevelopmentEnvironment(Environment):
         openapi_prefix: str = ""
         openapi_url: str = "/openapi.json"
         redoc_url: str = "/redoc"
-        title: str = "FastAPI pet project"
+        title: str = "Dev FastAPI pet project"
         version: str = "0.0.0"

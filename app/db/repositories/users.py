@@ -1,37 +1,37 @@
 from sqlalchemy import Executable, select, update, delete
 
-from app.models.alchemy import UserModel, User
-from app.db.repositories.repository import Repository
+from app.db.repositories import Repository
+from app.models import UserORM, UserDTO
 
 
-class UsersRepository(Repository[UserModel]):
-    async def get(self, _id: int) -> User:
+class UsersRepository(Repository[UserORM]):
+    async def get(self, _id: int) -> UserDTO:
         async with self.session() as conn:
-            query: Executable = select(UserModel).where(UserModel.id == _id)
+            query: Executable = select(UserORM).where(UserORM.id == _id)
             response = await conn.execute(query)
-            return User.model_validate(response.scalars().first())
+            return UserDTO.model_validate(response.scalars().first(), from_attributes=True)
 
-    async def get_all(self) -> list[User]:
+    async def get_all(self) -> list[UserDTO]:
         async with self.session() as conn:
-            query: Executable = select(UserModel)
+            query: Executable = select(UserORM)
             response = await conn.execute(query)
             users = response.scalars().all()
-            return [User.model_validate(user) for user in users]
+            return [UserDTO.model_validate(user, from_attributes=True) for user in users]
 
-    async def add(self, entity: UserModel) -> None:
+    async def add(self, entity: UserORM) -> None:
         async with self.session() as conn:
             conn.add(entity)
             await conn.commit()
 
-    async def update(self, _id: int, entity: UserModel) -> None:
+    async def update(self, _id: int, entity: UserORM) -> None:
         async with self.session() as conn:
             mapped_entity = {"name": entity.name, "age": entity.age, "passport": entity.passport}
-            query: Executable = update(UserModel).where(UserModel.id == _id).values(mapped_entity)
+            query: Executable = update(UserORM).where(UserORM.id == _id).values(mapped_entity)
             await conn.execute(query)
             await conn.commit()
 
     async def delete(self, _id: int) -> None:
         async with self.session() as conn:
-            query: Executable = delete(UserModel).where(UserModel.id == _id)
+            query: Executable = delete(UserORM).where(UserORM.id == _id)
             await conn.execute(query)
             await conn.commit()

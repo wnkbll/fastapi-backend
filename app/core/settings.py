@@ -1,11 +1,10 @@
-from typing import Type
 from functools import lru_cache
 
-from app.core.environments import DevelopmentEnvironment
-from app.core.environments import Environment, EnvironmentTypes
+from app.core.environments import Environment, EnvironmentTypes, DevelopmentEnvironment, ProductionEnvironment
 
-environments: dict[EnvironmentTypes, Type[Environment]] = {
+environments: dict[EnvironmentTypes, type[Environment]] = {
     EnvironmentTypes.dev: DevelopmentEnvironment,
+    EnvironmentTypes.prod: ProductionEnvironment,
 }
 
 
