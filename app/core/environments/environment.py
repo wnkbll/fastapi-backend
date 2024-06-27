@@ -1,3 +1,5 @@
+import pathlib
+
 from enum import Enum
 from typing import Any
 from dataclasses import dataclass
@@ -43,3 +45,14 @@ class Environment(BaseModel):
             "title": self.FastAPIKwargs.title,
             "version": self.FastAPIKwargs.version,
         }
+
+    @staticmethod
+    def get_env_file() -> pathlib.Path | None:
+        current_dir = pathlib.Path().cwd()
+
+        for _ in range(len(current_dir.parents)):
+            for file in current_dir.iterdir():
+                if file.name == ".env":
+                    return current_dir.joinpath(".env")
+
+            current_dir = current_dir.parent

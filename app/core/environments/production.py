@@ -1,3 +1,5 @@
+import pathlib
+
 from dotenv import dotenv_values
 from pydantic import PostgresDsn
 from dataclasses import dataclass
@@ -8,7 +10,7 @@ from app.core.environments.environment import Environment, EnvironmentTypes
 class ProductionEnvironment(Environment):
     app_env: EnvironmentTypes = EnvironmentTypes.prod
 
-    env_file: str = "../.env"
+    env_file: pathlib.Path = Environment.get_env_file()
     environment: dict[str, str | None] = dotenv_values(env_file)
 
     database_url: PostgresDsn = environment["DATABASE_URL"]
