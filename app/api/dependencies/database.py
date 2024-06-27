@@ -3,10 +3,10 @@ from fastapi import Depends
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
-from app.db import DatabaseConnection
 from app.db.repositories import Repository
+from app.db.connection import get_db_connection
 
-db_connection = DatabaseConnection()
+db_connection = get_db_connection()
 
 
 def get_repository(repo_type: type[Repository[DeclarativeBase]]) -> Callable[[async_sessionmaker[AsyncSession]], Repository]:

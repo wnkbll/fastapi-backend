@@ -9,9 +9,18 @@ from functools import lru_cache
 
 
 class Logger:
-    def __init__(self, config_file: str = "config.json"):
+    def __init__(self, config_file: str = "../logger_config.json", log_dir: str = "../logs"):
         self._logger: logging.Logger = logging.getLogger("news_app")
         self._path: str = config_file
+        self._log_dir: str = log_dir
+
+        self.create_log_directory()
+
+    def create_log_directory(self) -> None:
+        log_dir = pathlib.Path(self._log_dir)
+
+        if not log_dir.exists():
+            log_dir.mkdir()
 
     def setup(self) -> None:
         config_file = pathlib.Path(self._path)

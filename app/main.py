@@ -4,7 +4,8 @@ from fastapi import FastAPI
 
 from app.api.routes import router
 from app.core.environments import Environment
-from app.core import get_app_settings, get_app_logger
+from app.core.settings import get_app_settings, get_app_logger
+from app.core.events import create_start_app_handler, create_stop_app_handler
 
 
 def get_application() -> FastAPI:
@@ -12,6 +13,16 @@ def get_application() -> FastAPI:
     logger: logging.Logger = get_app_logger()
 
     application: FastAPI = FastAPI(**settings.fastapi_kwargs)
+
+    application.add_event_handler(
+        "startup",
+        create_start_app_handler(),
+    )
+
+    application.add_event_handler(
+        "shutdown",
+        create_stop_app_handler(),
+    )
 
     application.include_router(router, prefix=settings.api_prefix)
 
@@ -21,6 +32,3 @@ def get_application() -> FastAPI:
 
 
 app: FastAPI = get_application()
-
-# TODO: Add initialization of models(Basemodel.metadata.create_all)
-# TODO: Add logger

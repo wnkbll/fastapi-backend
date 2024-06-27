@@ -1,9 +1,10 @@
 import logging
 
+from functools import lru_cache
 from pydantic import PostgresDsn
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
 
-from app.core import get_app_settings, get_app_logger
+from app.core.settings import get_app_settings, get_app_logger
 
 
 class DatabaseConnection:
@@ -24,3 +25,9 @@ class DatabaseConnection:
     def dispose_engine(self) -> None:
         self.logger.info("Database engine was disposed")
         self.engine.dispose()
+
+
+@lru_cache
+def get_db_connection() -> DatabaseConnection:
+    db_connection = DatabaseConnection()
+    return db_connection
