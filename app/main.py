@@ -32,3 +32,7 @@ def get_application() -> FastAPI:
 
 
 app: FastAPI = get_application()
+
+# TODO: Rework models
+# TODO: Add exception handlers
+# TODO: Add middlewares (find out what is it)
