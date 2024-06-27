@@ -1,3 +1,5 @@
+import logging
+
 from enum import Enum
 from typing import Any
 from dataclasses import dataclass
@@ -21,6 +23,8 @@ class Environment(BaseModel):
 
     api_prefix: str
     allowed_hosts: list[str]
+
+    logger: logging.Logger
 
     @dataclass
     class FastAPIKwargs:
