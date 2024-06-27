@@ -1,6 +1,5 @@
-from app.core import get_app_settings
+import pathlib
 
-settings = get_app_settings()
-logger = settings.logger
 
-logger.info("Some info")
+def main():
+    config_path = pathlib.Path("../logger_config.json")

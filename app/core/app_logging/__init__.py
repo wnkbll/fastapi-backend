@@ -1,7 +1,7 @@
-from app.core.app_logging._logger import Logger
-
-logger = Logger("../logger_config.json").logger
+from app.core.app_logging.logger import Logger
+from app.core.app_logging.json_formatter import JSONFormatter
 
 __all__ = [
-    "logger",
+    "Logger",
+    "JSONFormatter",
 ]

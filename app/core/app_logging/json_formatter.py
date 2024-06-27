@@ -39,7 +39,7 @@ class JSONFormatter(logging.Formatter):
         message = self._prepare_log_dict(record)
         return json.dumps(message, default=str)
 
-    def _prepare_log_dict(self, record: logging.LogRecord) -> dict:
+    def _prepare_log_dict(self, record: logging.LogRecord) -> dict[str, any]:
         required_fields: dict[str, any] = {
             "message": record.getMessage(),
             "timestamp": datetime.datetime.fromtimestamp(

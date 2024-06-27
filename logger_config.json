@@ -7,7 +7,7 @@
             "datefmt": "%Y-%m-%dT%H:%M:%S%z"
         },
         "json": {
-            "()": "app.core.app_logging.json_formatter.JSONFormatter",
+            "()": "app.core.app_logging.JSONFormatter",
             "format_keys": {
                 "level": "levelname",
                 "message": "message",
@@ -32,7 +32,7 @@
             "level": "DEBUG",
             "formatter": "json",
             "filename": "../logs/app.log.jsonl",
-            "maxBytes": 1000,
+            "maxBytes": 2000000,
             "backupCount": 3
         },
         "queue_handler": {

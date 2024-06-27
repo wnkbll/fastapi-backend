@@ -1,13 +1,15 @@
+import logging
+
 from fastapi import FastAPI
 
 from app.api.routes import router
-from app.core import get_app_settings
 from app.core.environments import Environment
+from app.core import get_app_settings, get_app_logger
 
 
 def get_application() -> FastAPI:
     settings: Environment = get_app_settings()
-    logger = settings.logger
+    logger: logging.Logger = get_app_logger()
 
     application: FastAPI = FastAPI(**settings.fastapi_kwargs)
 

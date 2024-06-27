@@ -10,11 +10,12 @@ from functools import lru_cache
 
 class Logger:
     def __init__(self, config_file: str = "config.json"):
-        self._logger: Logger = logging.getLogger("news_app")
+        self._logger: logging.Logger = logging.getLogger("news_app")
         self._path: str = config_file
 
     def setup(self) -> None:
         config_file = pathlib.Path(self._path)
+
         with open(config_file) as f_in:
             config = json.load(f_in)
 
