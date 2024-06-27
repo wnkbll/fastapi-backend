@@ -3,7 +3,7 @@ from fastapi import Depends
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
-from app.db.connection import get_db_connection
+from app.db.events import get_db_connection
 from app.db.repositories.repository import Repository
 
 db_connection = get_db_connection()
