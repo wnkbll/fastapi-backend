@@ -1,7 +1,8 @@
 from sqlalchemy import Executable, select, update, delete
 
-from app.db.repositories import Repository
-from app.models import UserORM, UserDTO
+from app.models.orm.users import UserORM
+from app.models.dto.users import UserDTO
+from app.db.repositories.repository import Repository
 
 
 class UsersRepository(Repository[UserORM]):

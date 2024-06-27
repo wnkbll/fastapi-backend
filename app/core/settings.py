@@ -2,7 +2,7 @@ import logging
 
 from functools import lru_cache
 
-from app.core.app_logging import Logger
+from app.core.app_logging.logger import Logger
 from app.core.environments import Environment, EnvironmentTypes, DevelopmentEnvironment, ProductionEnvironment
 
 environments: dict[EnvironmentTypes, type[Environment]] = {

@@ -1,13 +1,13 @@
 {
     "version": 1,
-    "disable_existing_loggers": false,
+    "disable_existing_loggers": true,
     "formatters": {
         "simple": {
             "format": "[%(levelname)s|%(module)s|L%(lineno)d] %(asctime)s: %(message)s",
             "datefmt": "%Y-%m-%dT%H:%M:%S%z"
         },
         "json": {
-            "()": "app.core.app_logging.JSONFormatter",
+            "()": "app.core.app_logging.json_formatter.JSONFormatter",
             "format_keys": {
                 "level": "levelname",
                 "message": "message",
