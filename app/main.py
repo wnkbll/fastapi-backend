@@ -36,3 +36,4 @@ app: FastAPI = get_application()
 # TODO: Rework models
 # TODO: Add exception handlers
 # TODO: Add middlewares (find out what is it)
+# TODO: Add exception handler for repo response

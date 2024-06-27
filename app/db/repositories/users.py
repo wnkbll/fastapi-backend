@@ -1,23 +1,23 @@
 from sqlalchemy import Executable, select, update, delete
 
 from app.models.orm.users import UserORM
-from app.models.dto.users import UserDTO
+from app.models.schemas.users import UserSchema
 from app.db.repositories.repository import Repository
 
 
 class UsersRepository(Repository[UserORM]):
-    async def get(self, _id: int) -> UserDTO:
+    async def get(self, _id: int) -> UserSchema:
         async with self.session() as conn:
             query: Executable = select(UserORM).where(UserORM.id == _id)
             response = await conn.execute(query)
-            return UserDTO.model_validate(response.scalars().first(), from_attributes=True)
+            return UserSchema.model_validate(response.scalars().first(), from_attributes=True)
 
-    async def get_all(self) -> list[UserDTO]:
+    async def get_all(self) -> list[UserSchema]:
         async with self.session() as conn:
             query: Executable = select(UserORM)
             response = await conn.execute(query)
             users = response.scalars().all()
-            return [UserDTO.model_validate(user, from_attributes=True) for user in users]
+            return [UserSchema.model_validate(user, from_attributes=True) for user in users]
 
     async def add(self, entity: UserORM) -> None:
         async with self.session() as conn:
