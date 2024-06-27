@@ -5,7 +5,7 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from app.models.orm.common import Model
+from app.models.orm import Model
 from app.core.settings import get_app_settings
 
 SETTINGS = get_app_settings()

@@ -1,7 +1,7 @@
 from functools import lru_cache
 from sqlalchemy.ext.asyncio import AsyncEngine
 
-from app.models.orm.common import Model
+from app.models.orm import Model
 from app.db.connection import DatabaseConnection
 
 

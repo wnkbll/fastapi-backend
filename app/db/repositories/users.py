@@ -1,7 +1,7 @@
 from sqlalchemy import Executable, select, update, delete
 
-from app.models.orm.users import UserORM
-from app.models.schemas.users import UsersSchema
+from app.models.orm import UserORM
+from app.models.schemas import UsersSchema
 from app.db.repositories.repository import Repository
 
 
