@@ -21,6 +21,6 @@ class DatabaseConnection:
     def get_session(self) -> async_sessionmaker[AsyncSession]:
         return self.session
 
-    def dispose_engine(self) -> None:
+    async def dispose_engine(self) -> None:
         self.logger.info("Database engine was disposed")
-        self.engine.dispose()
+        await self.engine.dispose()

@@ -18,9 +18,9 @@ class ProductionEnvironment(Environment):
     api_prefix: str = "/api"
     allow_origins: list[str] = ["*"]
     allow_credentials: bool = True
-    allow_methods: list[str] = ["GET", "POST", "OPTIONS", "DELETE", "PATCH", "PUT"]
+    allow_methods: list[str] = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     allow_headers: list[str] = [
-        "Content-Type", "Set-Cookie", "Access-Control-Allow-Headers", "Access-Control-Allow-Origin", "Authorization"
+        "Accept", "Accept-Language", "Content-Language", "Content-Type",
     ]
 
     @dataclass
