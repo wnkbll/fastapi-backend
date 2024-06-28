@@ -16,7 +16,12 @@ class DevelopmentEnvironment(Environment):
     database_url: PostgresDsn = environment["DATABASE_URL"]
 
     api_prefix: str = "/api"
-    allowed_hosts: list[str] = ["*"]
+    allow_origins: list[str] = ["*"]
+    allow_credentials: bool = True
+    allow_methods: list[str] = ["GET", "POST", "OPTIONS", "DELETE", "PATCH", "PUT"]
+    allow_headers: list[str] = [
+        "Content-Type", "Set-Cookie", "Access-Control-Allow-Headers", "Access-Control-Allow-Origin", "Authorization"
+    ]
 
     @dataclass
     class FastAPIKwargs:

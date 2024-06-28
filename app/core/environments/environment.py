@@ -4,6 +4,11 @@ from enum import Enum
 from typing import Any
 from dataclasses import dataclass
 from pydantic import BaseModel, PostgresDsn
+from starlette.exceptions import HTTPException
+from fastapi.exceptions import RequestValidationError
+
+from app.api.errors.http_error import http_error_handler
+from app.api.errors.validation_error import http422_error_handler
 
 
 class EnvironmentTypes(Enum):
@@ -22,7 +27,10 @@ class Environment(BaseModel):
     database_url: PostgresDsn
 
     api_prefix: str
-    allowed_hosts: list[str]
+    allow_origins: list[str]
+    allow_credentials: bool
+    allow_methods: list[str]
+    allow_headers: list[str]
 
     @dataclass
     class FastAPIKwargs:
@@ -44,6 +52,10 @@ class Environment(BaseModel):
             "redoc_url": self.FastAPIKwargs.redoc_url,
             "title": self.FastAPIKwargs.title,
             "version": self.FastAPIKwargs.version,
+            "exception_handler": {
+                HTTPException: http_error_handler,
+                RequestValidationError: http422_error_handler,
+            },
         }
 
     @staticmethod

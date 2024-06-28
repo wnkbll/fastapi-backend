@@ -1,6 +1,7 @@
 import logging
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.routes import router
 from app.core.environments import Environment
@@ -13,6 +14,14 @@ def get_application() -> FastAPI:
     logger: logging.Logger = get_app_logger()
 
     application: FastAPI = FastAPI(**settings.fastapi_kwargs)
+
+    application.add_middleware(
+        CORSMiddleware,
+        allow_origins=settings.allow_origins,
+        allow_credentials=settings.allow_credentials,
+        allow_methods=settings.allow_methods,
+        allow_headers=settings.allow_headers,
+    )
 
     application.add_event_handler(
         "startup",
@@ -32,7 +41,4 @@ def get_application() -> FastAPI:
 
 app: FastAPI = get_application()
 
-# TODO: Rework models
-# TODO: Add exception handlers
-# TODO: Add middlewares (find out what is it)
 # TODO: Add exception handler for repo response
