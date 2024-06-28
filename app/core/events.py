@@ -15,8 +15,8 @@ def create_start_app_handler() -> Callable:
 
 
 def create_stop_app_handler() -> Callable:
-    def stop_app() -> None:
+    async def stop_app() -> None:
         logger.info("Database engine was disposed")
-        db_connection.dispose_engine()
+        await db_connection.dispose_engine()
 
     return stop_app
