@@ -1,4 +1,5 @@
 [tool.poetry]
+package-mode = false
 name = "news-app"
 version = "0.0.0"
 description = "Backend for news web site project"
@@ -7,11 +8,9 @@ authors = ["Willy Wonka <arzhevitin.g@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.12"
 fastapi = "^0.111.0"
-loguru = "^0.7.2"
 asyncpg = "^0.29.0"
 SQLAlchemy = "^2.0.31"
 alembic = "^1.13.2"
-
 
 [build-system]
 requires = ["poetry-core"]
