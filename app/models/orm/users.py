@@ -8,6 +8,8 @@ class UserORM(Model):
     __tablename__ = "User"
 
     id: Mapped[int] = MappedColumn(Integer, primary_key=True, index=True)
-    name: Mapped[str] = MappedColumn(String)
-    age: Mapped[int] = MappedColumn(Integer)
-    passport: Mapped[str] = MappedColumn(String)
+    username: Mapped[str] = MappedColumn(String)
+    email: Mapped[str] = MappedColumn(Integer)
+    bio: Mapped[str] = MappedColumn(String)
+    image: Mapped[str] = MappedColumn(String)
+    hashed_password: Mapped[str] = MappedColumn(String)

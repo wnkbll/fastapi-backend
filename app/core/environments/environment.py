@@ -1,11 +1,11 @@
 import pathlib
-
+from dataclasses import dataclass
 from enum import Enum
 from typing import Any
-from dataclasses import dataclass
-from pydantic import BaseModel, PostgresDsn
-from starlette.exceptions import HTTPException
+
 from fastapi.exceptions import RequestValidationError
+from pydantic import BaseModel, PostgresDsn, SecretStr
+from starlette.exceptions import HTTPException
 
 from app.api.errors.http_error import http_error_handler
 from app.api.errors.validation_error import http422_error_handler
@@ -25,6 +25,8 @@ class Environment(BaseModel):
     environment: dict[str, str | None]
 
     database_url: PostgresDsn
+
+    secret_key: SecretStr
 
     api_prefix: str
     allow_origins: list[str]

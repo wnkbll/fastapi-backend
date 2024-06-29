@@ -1,12 +1,11 @@
 from logging.config import fileConfig
 
+from alembic import context
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
-from alembic import context
-
-from app.models.orm import Model
 from app.core.settings import get_app_settings
+from app.models.orm import Model
 
 SETTINGS = get_app_settings()
 DATABASE_URL = SETTINGS.database_url

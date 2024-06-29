@@ -1,6 +1,6 @@
+import datetime
 import json
 import logging
-import datetime
 
 LOG_RECORD_BUILTIN_ATTRS = {
     "args",

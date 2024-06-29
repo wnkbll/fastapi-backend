@@ -1,5 +1,4 @@
 import logging
-
 from functools import lru_cache
 
 from app.core.app_logging.logger import Logger

@@ -1,8 +1,8 @@
 import pathlib
+from dataclasses import dataclass
 
 from dotenv import dotenv_values
-from pydantic import PostgresDsn
-from dataclasses import dataclass
+from pydantic import PostgresDsn, SecretStr
 
 from app.core.environments.environment import Environment, EnvironmentTypes
 
@@ -14,6 +14,8 @@ class ProductionEnvironment(Environment):
     environment: dict[str, str | None] = dotenv_values(env_file)
 
     database_url: PostgresDsn = environment["DATABASE_URL"]
+
+    secret_key: SecretStr = environment["SECRET_KEY"]
 
     api_prefix: str = "/api"
     allow_origins: list[str] = ["*"]

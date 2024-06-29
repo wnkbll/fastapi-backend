@@ -5,8 +5,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.routes import router
 from app.core.environments import Environment
-from app.core.settings import get_app_settings, get_app_logger
 from app.core.events import create_start_app_handler, create_stop_app_handler
+from app.core.settings import get_app_settings, get_app_logger
 
 
 def get_application() -> FastAPI:
@@ -41,4 +41,5 @@ def get_application() -> FastAPI:
 
 app: FastAPI = get_application()
 
-# TODO: Add exception handler for repo response
+# TODO: Add checking if db connection exists
+# TODO: Add checking if db response is not None
