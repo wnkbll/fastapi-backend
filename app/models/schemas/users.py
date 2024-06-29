@@ -1,37 +1,35 @@
 from typing import Optional
 
-from pydantic import EmailStr, HttpUrl
+from pydantic import EmailStr, HttpUrl, Field
 
 from app.models.schemas.base import AppModel, IDModelMixin
 from app.services import security
 
 
-class UserSchema(AppModel):
+class User(AppModel):
     username: str
     email: EmailStr
     bio: Optional[str] = ""
     image: Optional[HttpUrl] = None
 
 
-class UserInDB(IDModelMixin, UserSchema):
-    salt: str = ""
+class UserInDB(IDModelMixin, User):
     hashed_password: str = ""
 
     def check_password(self, password: str) -> bool:
-        return security.verify_password(self.salt + password, self.hashed_password)
+        return security.verify_password(password, self.hashed_password)
 
     def change_password(self, password: str) -> None:
-        self.salt = security.generate_salt()
-        self.hashed_password = security.get_password_hash(self.salt + password)
+        self.hashed_password = security.get_password_hash(password)
 
 
-class UserInLoginSchema(AppModel):
-    email: EmailStr
-    password: str
+class UserInLogin(AppModel):
+    email: EmailStr = Field()
+    password: str = Field()
 
 
-class UserInCreateSchema(UserInLoginSchema):
-    username: str
+class UserInCreate(UserInLogin):
+    username: str = Field()
 
 
 class UserInUpdate(AppModel):
@@ -42,7 +40,7 @@ class UserInUpdate(AppModel):
     image: Optional[HttpUrl] = None
 
 
-class UserWithToken(UserSchema):
+class UserWithToken(User):
     token: str
 
 

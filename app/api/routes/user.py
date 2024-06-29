@@ -2,11 +2,12 @@ from fastapi import APIRouter, Depends, Body, HTTPException
 from starlette.status import HTTP_400_BAD_REQUEST
 
 from app.api.dependencies.authentication import get_current_user_authorizer
-from app.api.dependencies.database import get_repository
 from app.core.environments import Environment
 from app.core.settings import get_app_settings
+from app.db.connection import DatabaseConnection
+from app.db.events import get_db_connection
 from app.db.repositories.users import UsersRepository
-from app.models.schemas.users import UserSchema, UserInResponse, UserWithToken, UserInUpdate
+from app.models.schemas.users import User, UserInResponse, UserWithToken, UserInUpdate, UserInDB
 from app.resources import strings
 from app.services import jwt
 from app.services.authentication import check_email_is_taken, check_username_is_taken
@@ -14,9 +15,9 @@ from app.services.authentication import check_email_is_taken, check_username_is_
 router = APIRouter()
 
 
-@router.get("", response_model=UserInResponse, name="users:get-current-user")
+@router.get("", response_model=UserInResponse, name="user:get-current-user")
 async def get_current_user(
-        user: UserSchema = Depends(get_current_user_authorizer()),
+        user: User = Depends(get_current_user_authorizer()),
         settings: Environment = Depends(get_app_settings)
 ) -> UserInResponse:
     token = jwt.create_access_token_for_user(
@@ -35,13 +36,15 @@ async def get_current_user(
     )
 
 
-@router.put("", response_model=UserInResponse, name="users:update-current-user")
+@router.put("", response_model=UserInResponse, name="user:update-current-user")
 async def update_current_user(
         user_update: UserInUpdate = Body(..., embed=True, alias="user"),
-        current_user: UserSchema = Depends(get_current_user_authorizer()),
-        users_repo: UsersRepository = Depends(get_repository(UsersRepository)),
+        current_user: UserInDB = Depends(get_current_user_authorizer()),
+        db_connection: DatabaseConnection = Depends(get_db_connection),
         settings: Environment = Depends(get_app_settings),
 ) -> UserInResponse:
+    users_repo: UsersRepository = UsersRepository(db_connection.session_factory)
+
     if user_update.username and user_update.username != current_user.username:
         if await check_username_is_taken(users_repo, user_update.username):
             raise HTTPException(

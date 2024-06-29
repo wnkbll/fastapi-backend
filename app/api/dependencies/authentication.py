@@ -5,12 +5,13 @@ from fastapi.security import APIKeyHeader
 from starlette import requests, status
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from app.api.dependencies.database import get_repository
 from app.core.environments import Environment
 from app.core.settings import get_app_settings
+from app.db.connection import DatabaseConnection
 from app.db.errors import EntityDoesNotExistError
+from app.db.events import get_db_connection
 from app.db.repositories.users import UsersRepository
-from app.models.schemas.users import UserSchema
+from app.models.schemas.users import UserInDB
 from app.resources import strings
 from app.services import jwt
 
@@ -75,10 +76,12 @@ def _get_authorization_header_optional(
 
 
 async def _get_current_user(
-        users_repo: UsersRepository = Depends(get_repository(UsersRepository)),
+        db_connection: DatabaseConnection = Depends(get_db_connection),
         token: str = Depends(_get_authorization_header_retriever()),
         settings: Environment = Depends(get_app_settings),
-) -> UserSchema:
+) -> UserInDB:
+    repo: UsersRepository = UsersRepository(db_connection.session_factory)
+
     try:
         username = jwt.get_username_from_token(
             token,
@@ -91,7 +94,7 @@ async def _get_current_user(
         )
 
     try:
-        return await users_repo.get_user_by_username(username=username)
+        return await repo.get_user_by_username(username=username)
     except EntityDoesNotExistError:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -100,11 +103,11 @@ async def _get_current_user(
 
 
 async def _get_current_user_optional(
-        repo: UsersRepository = Depends(get_repository(UsersRepository)),
+        db_connection: DatabaseConnection = Depends(get_db_connection),
         token: str = Depends(_get_authorization_header_retriever(required=False)),
         settings: Environment = Depends(get_app_settings),
-) -> Optional[UserSchema]:
+) -> Optional[UserInDB]:
     if token:
-        return await _get_current_user(repo, token, settings)
+        return await _get_current_user(db_connection, token, settings)
 
     return None

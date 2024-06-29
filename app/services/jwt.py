@@ -4,7 +4,7 @@ import jwt
 from pydantic import ValidationError
 
 from app.models.schemas.jwt import JWTMeta, JWTUser
-from app.models.schemas.users import UserSchema
+from app.models.schemas.users import User
 
 JWT_SUBJECT = "access"
 ALGORITHM = "HS256"
@@ -23,7 +23,7 @@ def create_jwt_token(
     return jwt.encode(to_encode, secret_key, algorithm=ALGORITHM)
 
 
-def create_access_token_for_user(user: UserSchema, secret_key: str) -> str:
+def create_access_token_for_user(user: User, secret_key: str) -> str:
     return create_jwt_token(
         jwt_content=JWTUser(username=user.username).model_dump(),
         secret_key=secret_key,
