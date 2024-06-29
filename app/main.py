@@ -40,6 +40,3 @@ def get_application() -> FastAPI:
 
 
 app: FastAPI = get_application()
-
-# TODO: Add checking if db connection exists
-# TODO: Add checking if db response is not None
