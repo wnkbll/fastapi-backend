@@ -9,7 +9,7 @@ db_connection = get_db_connection()
 
 def create_start_app_handler() -> Callable:
     async def start_app() -> None:
-        await init_models(db_connection.get_engine())
+        await init_models(db_connection.engine)
 
     return start_app
 

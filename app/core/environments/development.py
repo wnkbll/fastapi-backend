@@ -15,7 +15,7 @@ class DevelopmentEnvironment(Environment):
 
     database_url: PostgresDsn = environment["DATABASE_URL"]
 
-    secret_key: SecretStr = environment["SECRET_KEY"]
+    secret_key: SecretStr = SecretStr(environment["SECRET_KEY"])
 
     api_prefix: str = "/api"
     allow_origins: list[str] = ["*"]
