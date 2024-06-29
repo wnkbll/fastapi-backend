@@ -38,7 +38,15 @@ class UsersRepository(Repository):
             email: str,
             password: str,
     ) -> UserInDB:
-        pass
+        user = UserInDB(username=username, email=email)
+        user.change_password(password)
+
+        async with self.session_factory() as session:
+            user_in_table = UsersTable(username=username, email=email, hashed_password=user.hashed_password)
+            session.add(user_in_table)
+            await session.commit()
+
+        return user
 
     async def update_user(
             self,
