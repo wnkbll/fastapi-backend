@@ -1,7 +1,7 @@
 from sqlalchemy.orm import DeclarativeBase
 
 
-class Model(DeclarativeBase):
+class Table(DeclarativeBase):
     def __init__(self, **kw: any):
         super().__init__(**kw)
 

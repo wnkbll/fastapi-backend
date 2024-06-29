@@ -5,7 +5,7 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from app.core.settings import get_app_settings
-from app.models.orm import Model
+from app.models.tables import Table
 
 SETTINGS = get_app_settings()
 DATABASE_URL = SETTINGS.database_url
@@ -17,7 +17,7 @@ if config.config_file_name is not None:
 
 config.set_main_option("sqlalchemy.url", DATABASE_URL + "?async_fallback=True")
 
-target_metadata = Model.metadata
+target_metadata = Table.metadata
 
 
 def run_migrations_offline() -> None:

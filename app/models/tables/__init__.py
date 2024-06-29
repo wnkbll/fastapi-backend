@@ -1,11 +1,11 @@
 from sqlalchemy import Integer, String
 from sqlalchemy.orm import Mapped, MappedColumn
 
-from app.models.orm.common import Model
+from app.models.tables.table import Table
 
 
-class UserORM(Model):
-    __tablename__ = "User"
+class UsersTable(Table):
+    __tablename__ = "Users"
 
     id: Mapped[int] = MappedColumn(Integer, primary_key=True, index=True)
     username: Mapped[str] = MappedColumn(String)
@@ -13,3 +13,9 @@ class UserORM(Model):
     bio: Mapped[str] = MappedColumn(String)
     image: Mapped[str] = MappedColumn(String)
     hashed_password: Mapped[str] = MappedColumn(String)
+
+
+__all__ = [
+    "Table",
+    "UsersTable",
+]

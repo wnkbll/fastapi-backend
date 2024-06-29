@@ -4,14 +4,14 @@ from sqlalchemy import Executable, select, update
 
 from app.db.errors import EntityDoesNotExistError
 from app.db.repositories.repository import Repository
-from app.models.orm import UserORM
 from app.models.schemas.users import UserSchema, UserInDB
+from app.models.tables import UsersTable
 
 
 class UsersRepository(Repository):
     async def get_user_by_email(self, *, email: str) -> UserInDB:
         async with self.session_factory() as session:
-            query: Executable = select(UserORM).where(UserORM.email == email)
+            query: Executable = select(UsersTable).where(UsersTable.email == email)
             execution = await session.execute(query)
 
             user_row = execution.scalars().first()
@@ -22,7 +22,7 @@ class UsersRepository(Repository):
 
     async def get_user_by_username(self, *, username: str) -> UserInDB:
         async with self.session_factory() as session:
-            query: Executable = select(UserORM).where(UserORM.username == username)
+            query: Executable = select(UsersTable).where(UsersTable.username == username)
             execution = await session.execute(query)
 
             user_row = execution.scalars().first()
@@ -53,7 +53,7 @@ class UsersRepository(Repository):
 
         async with self.session_factory() as session:
             query: Executable = (
-                update(UserORM).
+                update(UsersTable).
                 values(
                     username=user_to_change.username,
                     email=user_to_change.email,

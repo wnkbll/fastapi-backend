@@ -3,7 +3,7 @@ from functools import lru_cache
 from sqlalchemy.ext.asyncio import AsyncEngine
 
 from app.db.connection import DatabaseConnection
-from app.models.orm import Model
+from app.models.tables import Table
 
 
 @lru_cache
@@ -14,4 +14,4 @@ def get_db_connection() -> DatabaseConnection:
 
 async def init_models(engine: AsyncEngine) -> None:
     async with engine.begin() as conn:
-        await conn.run_sync(Model.metadata.create_all)
+        await conn.run_sync(Table.metadata.create_all)
