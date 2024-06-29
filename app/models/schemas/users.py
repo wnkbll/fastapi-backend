@@ -2,18 +2,18 @@ from typing import Optional
 
 from pydantic import EmailStr, HttpUrl
 
-from app.models.schemas.base import AppModel
+from app.models.schemas.base import AppModel, IDModelMixin
 from app.services import security
 
 
 class UserSchema(AppModel):
     username: str
     email: EmailStr
-    bio: str
+    bio: Optional[str] = ""
     image: Optional[HttpUrl] = None
 
 
-class UserInDB(UserSchema):
+class UserInDB(IDModelMixin, UserSchema):
     salt: str = ""
     hashed_password: str = ""
 

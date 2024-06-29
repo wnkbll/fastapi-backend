@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 def convert_field_to_upper_case(string: str) -> str:
@@ -19,3 +19,7 @@ def get_config() -> dict[str, any]:
 
 class AppModel(BaseModel):
     model_config = ConfigDict(**get_config())
+
+
+class IDModelMixin(BaseModel):
+    id_: int = Field(0, alias="id")

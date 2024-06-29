@@ -4,7 +4,7 @@ from sqlalchemy import Executable, select, update
 
 from app.db.errors import EntityDoesNotExistError
 from app.db.repositories.repository import Repository
-from app.models.schemas.users import UserSchema, UserInDB
+from app.models.schemas.users import UserInDB
 from app.models.tables import UsersTable
 
 
@@ -14,9 +14,9 @@ class UsersRepository(Repository):
             query: Executable = select(UsersTable).where(UsersTable.email == email)
             execution = await session.execute(query)
 
-            user_row = execution.scalars().first()
+            user_row: UsersTable = execution.scalars().first()
             if user_row is not None:
-                return UserInDB(**user_row)
+                return UserInDB.model_validate(user_row, from_attributes=True)
 
             raise EntityDoesNotExistError(f"User with email:{email} does not exist")
 
@@ -25,9 +25,9 @@ class UsersRepository(Repository):
             query: Executable = select(UsersTable).where(UsersTable.username == username)
             execution = await session.execute(query)
 
-            user_row = execution.scalars().first()
+            user_row: UsersTable = execution.scalars().first()
             if user_row is not None:
-                return UserInDB(**user_row)
+                return UserInDB.model_validate(user_row, from_attributes=True)
 
             raise EntityDoesNotExistError(f"User with username:{username} does not exist")
 
@@ -51,7 +51,7 @@ class UsersRepository(Repository):
     async def update_user(
             self,
             *,
-            user: UserSchema,
+            user: UserInDB,
             username: Optional[str] = None,
             email: Optional[str] = None,
             password: Optional[str] = None,
