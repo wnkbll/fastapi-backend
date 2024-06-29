@@ -1,5 +1,5 @@
 from sqlalchemy import Integer, String
-from sqlalchemy.orm import Mapped, MappedColumn
+from sqlalchemy.orm import Mapped, mapped_column
 
 from app.models.tables.table import Table
 
@@ -7,12 +7,12 @@ from app.models.tables.table import Table
 class UsersTable(Table):
     __tablename__ = "Users"
 
-    id: Mapped[int] = MappedColumn(Integer, primary_key=True, index=True)
-    username: Mapped[str] = MappedColumn(String)
-    email: Mapped[str] = MappedColumn(Integer)
-    bio: Mapped[str] = MappedColumn(String)
-    image: Mapped[str] = MappedColumn(String)
-    hashed_password: Mapped[str] = MappedColumn(String)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    username: Mapped[str] = mapped_column(String, nullable=False)
+    email: Mapped[str] = mapped_column(Integer, nullable=False)
+    bio: Mapped[str] = mapped_column(String, nullable=True)
+    image: Mapped[str] = mapped_column(String, nullable=True)
+    hashed_password: Mapped[str] = mapped_column(String, nullable=False)
 
 
 __all__ = [

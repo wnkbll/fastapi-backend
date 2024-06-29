@@ -31,6 +31,15 @@ class UsersRepository(Repository):
 
             raise EntityDoesNotExistError(f"User with username:{username} does not exist")
 
+    async def create_user(
+            self,
+            *,
+            username: str,
+            email: str,
+            password: str,
+    ) -> UserInDB:
+        pass
+
     async def update_user(
             self,
             *,
