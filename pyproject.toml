@@ -1,8 +1,8 @@
 [tool.poetry]
 package-mode = false
-name = "news-app"
+name = "fastapi-backend"
 version = "0.0.0"
-description = "Backend for news web site project"
+description = "FastAPI backend pet project"
 authors = ["Willy Wonka <arzhevitin.g@gmail.com>"]
 
 [tool.poetry.dependencies]
@@ -16,7 +16,7 @@ passlib = "^1.7.4"
 bcrypt = "4.0.1"
 
 [tool.poetry.group.dev.dependencies]
-requests = "^2.32.3"
+pytest = "^8.2.2"
 
 [build-system]
 requires = ["poetry-core"]
