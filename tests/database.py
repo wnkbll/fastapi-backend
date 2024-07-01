@@ -1,8 +1,8 @@
 import asyncio
 
-from app.models.tables import Table
-from app.db.events import get_db_connection
-from app.db.repositories.users import UsersRepository
+from src.models.tables import Table
+from src.db.events import get_db_connection
+from src.db.repositories.users import UsersRepository
 
 
 async def main() -> None:
