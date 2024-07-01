@@ -7,14 +7,13 @@ from pydantic import PostgresDsn, SecretStr
 from app.core.environments.environment import Environment, EnvironmentTypes
 
 
-class ProductionEnvironment(Environment):
-    app_env: EnvironmentTypes = EnvironmentTypes.prod
+class TestEnvironment(Environment):
+    app_env: EnvironmentTypes = EnvironmentTypes.test
 
-    env_file: pathlib.Path = Environment.get_env_file("prod.env")
+    env_file: pathlib.Path = Environment.get_env_file("test.env")
     environment: dict[str, str | None] = dotenv_values(env_file)
 
     database_url: PostgresDsn = environment["DATABASE_URL"]
-
     secret_key: SecretStr = SecretStr(environment["SECRET_KEY"])
 
     api_prefix: str = "/api"
@@ -27,10 +26,10 @@ class ProductionEnvironment(Environment):
 
     @dataclass
     class FastAPIKwargs:
-        debug: bool = False
+        debug: bool = True
         docs_url: str = "/docs"
         openapi_prefix: str = ""
         openapi_url: str = "/openapi.json"
         redoc_url: str = "/redoc"
-        title: str = "Prod FastAPI pet project"
+        title: str = "Test FastAPI pet project"
         version: str = "0.0.0"

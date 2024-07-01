@@ -10,7 +10,7 @@ from app.core.environments.environment import Environment, EnvironmentTypes
 class DevelopmentEnvironment(Environment):
     app_env: EnvironmentTypes = EnvironmentTypes.dev
 
-    env_file: pathlib.Path = Environment.get_env_file()
+    env_file: pathlib.Path = Environment.get_env_file(".env")
     environment: dict[str, str | None] = dotenv_values(env_file)
 
     database_url: PostgresDsn = environment["DATABASE_URL"]

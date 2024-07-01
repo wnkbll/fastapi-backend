@@ -61,12 +61,12 @@ class Environment(BaseModel):
         }
 
     @staticmethod
-    def get_env_file() -> pathlib.Path | None:
+    def get_env_file(name: str) -> pathlib.Path | None:
         current_dir = pathlib.Path().cwd()
 
         for _ in range(len(current_dir.parents)):
             for file in current_dir.iterdir():
-                if file.name == ".env":
+                if file.name == name:
                     return current_dir.joinpath(".env")
 
             current_dir = current_dir.parent

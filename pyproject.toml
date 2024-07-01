@@ -2,7 +2,7 @@
 package-mode = false
 name = "fastapi-backend"
 version = "0.0.0"
-description = "FastAPI backend pet project"
+description = "FastAPI pet project"
 authors = ["Willy Wonka <arzhevitin.g@gmail.com>"]
 
 [tool.poetry.dependencies]
