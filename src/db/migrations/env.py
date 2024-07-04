@@ -4,11 +4,12 @@ from alembic import context
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
-from src.core.settings import get_app_settings
+from src.core.config import get_app_settings
+from src.core.environments import EnvironmentTypes
 from src.models.tables import Table
 
-SETTINGS = get_app_settings()
-DATABASE_URL = SETTINGS.database_url
+SETTINGS = get_app_settings(EnvironmentTypes.dev)
+DATABASE_URL = SETTINGS.database.url
 
 config = context.config
 
