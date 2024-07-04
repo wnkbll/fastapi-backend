@@ -177,7 +177,7 @@ pyrightconfig.json
 logs
 logs/*
 
-#Poetry generated files
-poetry.lock
+#Depricated
+depricated/
 
 # End of https://www.toptal.com/developers/gitignore/api/python
