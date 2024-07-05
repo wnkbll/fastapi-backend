@@ -43,15 +43,15 @@ def register_routers(application: FastAPI, settings: Environment) -> None:
     application.include_router(router, prefix=settings.api_prefix)
 
 
-def register_events(application: FastAPI, settings: Environment) -> None:
+def register_events(application: FastAPI) -> None:
     application.add_event_handler(
         "startup",
-        create_start_app_handler(settings)
+        create_start_app_handler()
     )
 
     application.add_event_handler(
         "shutdown",
-        create_stop_app_handler(settings)
+        create_stop_app_handler()
     )
 
 
@@ -63,7 +63,7 @@ def get_application(env_type: EnvironmentTypes) -> FastAPI:
 
     register_middleware(application, settings)
     register_routers(application, settings)
-    register_events(application, settings)
+    register_events(application)
 
     logger.success("Application was successfully initialized")
 

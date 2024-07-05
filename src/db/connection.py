@@ -32,11 +32,21 @@ class DatabaseConnection:
     def session_factory(self) -> async_sessionmaker[AsyncSession]:
         return self._session_factory
 
+    async def drop_all_tables(self) -> None:
+        async with self.engine.begin() as connection:
+            await connection.run_sync(Table.metadata.drop_all)
+            logger.info("All tables was dropped")
+
+    async def create_all_tables(self) -> None:
+        async with self.engine.begin() as connection:
+            await connection.run_sync(Table.metadata.create_all)
+            logger.info("All tables was created")
+
     async def init_db(self) -> None:
         async with self.engine.begin() as connection:
             if self._env_type == EnvironmentTypes.test:
-                await connection.run_sync(Table.metadata.drop_all)
-            await connection.run_sync(Table.metadata.create_all)
+                await self.drop_all_tables()
+            await self.create_all_tables()
             logger.info("Database was initialized")
 
     async def dispose_engine(self) -> None:
@@ -45,7 +55,7 @@ class DatabaseConnection:
 
 
 @lru_cache
-def get_db_connection(env_type: EnvironmentTypes):
+def get_db_connection(env_type: EnvironmentTypes = EnvironmentTypes.dev):
     settings = get_app_settings(env_type)
     db_connection = DatabaseConnection(settings)
     return db_connection
