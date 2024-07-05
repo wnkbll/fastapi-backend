@@ -7,12 +7,14 @@ from sqlalchemy.orm import DeclarativeBase
 
 from src.core.config import get_app_settings
 from src.core.environments import Environment, EnvironmentTypes
+from src.models.tables import Table
 
 
 class DatabaseConnection:
     def __init__(self, settings: Environment):
+        self._env_type: EnvironmentTypes = settings.env_type
         self._url: PostgresDsn = (
-            settings.database.test_url if settings.env_type == EnvironmentTypes.test else settings.database.url
+            settings.database.test_url if self._env_type == EnvironmentTypes.test else settings.database.url
         )
         self._engine: AsyncEngine = create_async_engine(self.url)
         self._session_factory: async_sessionmaker[AsyncSession] = async_sessionmaker(
@@ -31,9 +33,11 @@ class DatabaseConnection:
     def session_factory(self) -> async_sessionmaker[AsyncSession]:
         return self._session_factory
 
-    async def init_db(self, table: DeclarativeBase) -> None:
+    async def init_db(self) -> None:
         async with self.engine.begin() as connection:
-            await connection.run_sync(table.metadata.create_all)
+            if self._env_type == EnvironmentTypes.test:
+                await connection.run_sync(Table.metadata.drop_all)
+            await connection.run_sync(Table.metadata.create_all)
             logger.info("Database was initialized")
 
     async def dispose_engine(self) -> None:

@@ -1,17 +1,7 @@
-from datetime import datetime, UTC
-from typing import Annotated
-
-from sqlalchemy import Integer, String, ForeignKey, text
+from sqlalchemy import Integer, String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.models.tables.table import Table
-
-created_at = Annotated[datetime, mapped_column(server_default=text("TIMEZONE('utc', now())"))]
-updated_at = Annotated[
-    datetime, mapped_column(
-        server_default=text("TIMEZONE('utc', now())"), onupdate=datetime.now(UTC),
-    )
-]
 
 
 class UsersTable(Table):
@@ -25,7 +15,7 @@ class UsersTable(Table):
     hashed_password: Mapped[str] = mapped_column(String, nullable=False)
 
     articles: Mapped[list["ArticlesTable"]] = relationship(
-        back_populates="author",
+        back_populates="user",
     )
 
 
@@ -33,12 +23,11 @@ class ArticlesTable(Table):
     __tablename__ = "Articles"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    name: Mapped[str] = mapped_column(String, nullable=False)
     text: Mapped[str] = mapped_column(String, nullable=False)
-    author_id: Mapped[int] = mapped_column(ForeignKey("Users.id", ondelete="CASCADE"))
-    created_at: Mapped[created_at]
-    updated_at: Mapped[updated_at]
+    author_id: Mapped[int] = mapped_column(ForeignKey("Users.id", ondelete="CASCADE"), nullable=False)
 
-    author: Mapped["UsersTable"] = relationship(
+    user: Mapped["UsersTable"] = relationship(
         back_populates="articles",
     )
 

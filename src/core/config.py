@@ -1,9 +1,10 @@
 from functools import lru_cache
 
-from src.core.environments import Environment, EnvironmentTypes, DevelopmentEnvironment
+from src.core.environments import Environment, EnvironmentTypes, DevelopmentEnvironment, TestEnvironment
 
 environments: dict[EnvironmentTypes, type[Environment]] = {
     EnvironmentTypes.dev: DevelopmentEnvironment,
+    EnvironmentTypes.test: TestEnvironment,
 }
 
 
