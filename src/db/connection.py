@@ -3,7 +3,6 @@ from functools import lru_cache
 from loguru import logger
 from pydantic import PostgresDsn
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
-from sqlalchemy.orm import DeclarativeBase
 
 from src.core.config import get_app_settings
 from src.core.environments import Environment, EnvironmentTypes

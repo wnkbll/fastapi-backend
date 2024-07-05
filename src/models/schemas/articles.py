@@ -1,7 +1,5 @@
 from pydantic import BaseModel
 
-from pydantic import BaseModel
-
 from src.models.schemas.base import IDModelMixin
 
 
