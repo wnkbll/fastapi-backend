@@ -180,4 +180,7 @@ logs/*
 #Depricated
 depricated/
 
+#Migrations
+/src/db/migrations/versions/*.py
+
 # End of https://www.toptal.com/developers/gitignore/api/python

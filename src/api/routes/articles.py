@@ -29,7 +29,13 @@ async def get_all_articles(
         username: str,
         articles_repo: ArticlesRepository = Depends(get_repository(ArticlesRepository)),
 ) -> ListOfArticlesInResponse:
-    articles = await articles_repo.get_articles_by_author_username(username=username)
+    try:
+        articles = await articles_repo.get_articles_by_author_username(username=username)
+    except EntityDoesNotExistError:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"User {username} does not exists"
+        )
 
     articles_for_response = [
         ArticleForResponse(
