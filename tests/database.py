@@ -11,7 +11,7 @@ async def main() -> None:
     db_connection = get_db_connection(EnvironmentTypes.test)
     await db_connection.init_db()
 
-    user_repo = UsersRepository(db_connection.session_factory)
+    users_repo = UsersRepository(db_connection.session_factory)
     articles_repo = ArticlesRepository(db_connection.session_factory)
 
     user1 = UserInCreate(username="Bob", email="some.address1@gmail.com", password="123456")
@@ -20,14 +20,14 @@ async def main() -> None:
     user4 = UserInCreate(username="Tracy", email="some.address4@gmail.com", password="123456")
     user5 = UserInCreate(username="Tom", email="some.address5@gmail.com", password="123456")
 
-    await user_repo.create_user(user_in_create=user1)
-    await user_repo.create_user(user_in_create=user2)
-    await user_repo.create_user(user_in_create=user3)
-    await user_repo.create_user(user_in_create=user4)
-    await user_repo.create_user(user_in_create=user5)
+    await users_repo.create_user(user_in_create=user1)
+    await users_repo.create_user(user_in_create=user2)
+    await users_repo.create_user(user_in_create=user3)
+    await users_repo.create_user(user_in_create=user4)
+    await users_repo.create_user(user_in_create=user5)
 
-    user_by_username = await user_repo.get_user_by_username(username="Alice")
-    user_by_email = await user_repo.get_user_by_email(email="some.address4@gmail.com")
+    user_by_username = await users_repo.get_user_by_username(username="Alice")
+    user_by_email = await users_repo.get_user_by_email(email="some.address4@gmail.com")
 
     print(user_by_username.verify_password("123456"))
     print(user_by_username.verify_password("654321"))
@@ -42,12 +42,12 @@ async def main() -> None:
         bio="some text about me"
     )
 
-    await user_repo.update_user(
+    await users_repo.update_user(
         username=user_by_username.username,
         user_in_update=user_in_update,
     )
 
-    user_by_username = await user_repo.get_user_by_username(username="Joe")
+    user_by_username = await users_repo.get_user_by_username(username="Joe")
     print(user_by_username.verify_password("123456"))
     print(user_by_username.verify_password("654321"))
     print(user_by_username.model_dump())
