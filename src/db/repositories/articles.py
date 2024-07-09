@@ -12,6 +12,20 @@ class ArticlesRepository(Repository):
     async def get_article_by_slug(self, *, slug: str) -> ArticleInDB:
         pass
 
+    async def get_all_articles(self) -> list[ArticleInDB]:
+        query: Executable = select(ArticlesTable)
+
+        async with self.session_factory() as session:
+            response = await session.execute(query)
+            articles_ = response.scalars().all()
+
+            if articles_ is None:
+                raise EntityDoesNotExistError("List of articles is empty")
+
+            return [
+                ArticleInDB.model_validate(article, from_attributes=True) for article in articles_
+            ]
+
     async def get_articles_by_author_username(self, *, username: str) -> list[ArticleInDB]:
         query: Executable = (
             select(UsersTable).

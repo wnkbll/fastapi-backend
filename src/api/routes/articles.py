@@ -1,11 +1,8 @@
-from typing import Callable
-
 from fastapi import APIRouter, Depends, Body, HTTPException, status
 
-from src.db.connection import get_db_connection, DatabaseConnection
+from src.api.dependencies import get_repository
 from src.db.errors import EntityDoesNotExistError
 from src.db.repositories.articles import ArticlesRepository
-from src.db.repositories.repository import Repository
 from src.models.schemas.articles import (
     ArticleInCreate,
     ArticleInResponse,
@@ -16,16 +13,36 @@ from src.models.schemas.articles import (
 router = APIRouter()
 
 
-# TODO Move this function to dependencies module
-def get_repository(repository: type[Repository]) -> Callable[[DatabaseConnection], Repository]:
-    def __get_repo(db_connection: DatabaseConnection = Depends(get_db_connection)) -> Repository:
-        return repository(db_connection.session_factory)
+@router.get("", name="articles:get-all-articles", response_model=ListOfArticlesInResponse)
+async def get_all_articles(
+        articles_repo: ArticlesRepository = Depends(get_repository(ArticlesRepository)),
+) -> ListOfArticlesInResponse:
+    try:
+        articles = await articles_repo.get_all_articles()
+    except EntityDoesNotExistError:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"List of articles is empty"
+        )
 
-    return __get_repo
+    articles_for_response = [
+        ArticleForResponse(
+            slug=article.slug,
+            title=article.title,
+            description=article.description,
+            body=article.body,
+            author_id=article.author_id,
+        ) for article in articles
+    ]
+
+    return ListOfArticlesInResponse(
+        articles=articles_for_response,
+        articles_count=len(articles_for_response),
+    )
 
 
 @router.get("/{username}", name="articles:get-all-articles-from-user", response_model=ListOfArticlesInResponse)
-async def get_all_articles(
+async def get_all_articles_from_user(
         username: str,
         articles_repo: ArticlesRepository = Depends(get_repository(ArticlesRepository)),
 ) -> ListOfArticlesInResponse:
