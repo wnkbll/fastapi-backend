@@ -46,10 +46,3 @@ class ArticlesTable(Table):
     user: Mapped["UsersTable"] = relationship(
         back_populates="articles",
     )
-
-
-__all__ = [
-    "Table",
-    "UsersTable",
-    "ArticlesTable",
-]
