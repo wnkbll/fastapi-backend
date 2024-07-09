@@ -4,8 +4,10 @@ from src.models.schemas.base import IDModelMixin
 
 
 class Article(BaseModel):
-    name: str
-    text: str
+    slug: str
+    title: str
+    description: str
+    body: str
     author_id: int
 
 

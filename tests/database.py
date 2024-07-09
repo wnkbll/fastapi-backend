@@ -38,14 +38,30 @@ async def main() -> None:
     print(user_by_username.model_dump())
     print("---------------------------------")
 
-    await articles_repo.create_article(name="Article1", text="Some text for article1", username="Man")
-    await articles_repo.create_article(name="Article2", text="Some text for article2", username="Man")
-    await articles_repo.create_article(name="Article3", text="Some text for article3", username="Bob")
-    await articles_repo.create_article(name="Article4", text="Some text for article4", username="Bob")
-    await articles_repo.create_article(name="Article5", text="Some text for article5", username="Bob")
-    await articles_repo.create_article(name="Article6", text="Some text for article6", username="Tom")
-    await articles_repo.create_article(name="Article7", text="Some text for article7", username="Tracy")
-    await articles_repo.create_article(name="Article8", text="Some text for article8", username="Tracy")
+    await articles_repo.create_article(
+        title="Article1", description="Some desc for article1", body="Some text for article1", username="Man",
+    )
+    await articles_repo.create_article(
+        title="Article2", description="Some desc for article2", body="Some text for article2", username="Man",
+    )
+    await articles_repo.create_article(
+        title="Article3", description="Some desc for article3", body="Some text for article3", username="Bob",
+    )
+    await articles_repo.create_article(
+        title="Article4", description="Some desc for article4", body="Some text for article4", username="Bob",
+    )
+    await articles_repo.create_article(
+        title="Article5", description="Some desc for article5", body="Some text for article5", username="Bob",
+    )
+    await articles_repo.create_article(
+        title="Article6", description="Some desc for article6", body="Some text for article6", username="Tom",
+    )
+    await articles_repo.create_article(
+        title="Article7", description="Some desc for article7", body="Some text for article7", username="Tracy",
+    )
+    await articles_repo.create_article(
+        title="Article8", description="Some desc for article8", body="Some text for article8", username="Tracy",
+    )
 
     articles = await articles_repo.get_articles_by_author_username(username="Bob")
 

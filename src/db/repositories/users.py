@@ -37,7 +37,7 @@ class UsersRepository(Repository):
         user_in_db = UserInDB(username=username, email=email)
         user_in_db.change_password(password)
 
-        user = UsersTable(username=username, email=email, hashed_password=user_in_db.hashed_password)
+        user = UsersTable(username=username, email=email, salt=user_in_db.salt, hashed_password=user_in_db.hashed_password)
 
         async with self.session_factory() as session:
             session.add(user)
