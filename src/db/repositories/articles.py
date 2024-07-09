@@ -26,12 +26,9 @@ class ArticlesRepository(Repository):
             if user_with_articles is None:
                 raise EntityDoesNotExistError(f"User with username:{username} does not exist")
 
-            articles_ = []
-            for article in user_with_articles.articles:
-                article_in_db = ArticleInDB.model_validate(article, from_attributes=True)
-                articles_.append(article_in_db)
-
-            return articles_
+            return [
+                ArticleInDB.model_validate(article, from_attributes=True) for article in user_with_articles.articles
+            ]
 
     async def create_article(self, *, article_in_create: ArticleInCreate) -> ArticleInDB:
         query: Executable = select(UsersTable).where(UsersTable.username == article_in_create.username)
@@ -47,6 +44,9 @@ class ArticlesRepository(Repository):
             response = await session.execute(query)
 
             user_row = response.scalars().first()
+            if user_row is None:
+                raise EntityDoesNotExistError(f"User with username:{article_in_create.username} does not exist")
+
             article.user = user_row
 
             session.add(article)
