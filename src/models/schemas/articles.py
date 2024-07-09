@@ -13,3 +13,10 @@ class Article(BaseModel):
 
 class ArticleInDB(Article, IDModelMixin):
     pass
+
+
+class ArticleInCreate(BaseModel):
+    title: str
+    description: str
+    body: str
+    username: str

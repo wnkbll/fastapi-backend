@@ -5,6 +5,7 @@ from src.db.connection import get_db_connection
 from src.db.repositories.articles import ArticlesRepository
 from src.db.repositories.users import UsersRepository
 from src.models.schemas.users import UserInCreate, UserInUpdate
+from src.models.schemas.articles import ArticleInCreate
 
 
 async def main() -> None:
@@ -53,30 +54,39 @@ async def main() -> None:
     print(user_by_username.model_dump())
     print("---------------------------------")
 
-    await articles_repo.create_article(
+    article1 = ArticleInCreate(
         title="Article1", description="Some desc for article1", body="Some text for article1", username="Man",
     )
-    await articles_repo.create_article(
+    article2 = ArticleInCreate(
         title="Article2", description="Some desc for article2", body="Some text for article2", username="Man",
     )
-    await articles_repo.create_article(
+    article3 = ArticleInCreate(
         title="Article3", description="Some desc for article3", body="Some text for article3", username="Bob",
     )
-    await articles_repo.create_article(
+    article4 = ArticleInCreate(
         title="Article4", description="Some desc for article4", body="Some text for article4", username="Bob",
     )
-    await articles_repo.create_article(
+    article5 = ArticleInCreate(
         title="Article5", description="Some desc for article5", body="Some text for article5", username="Bob",
     )
-    await articles_repo.create_article(
+    article6 = ArticleInCreate(
         title="Article6", description="Some desc for article6", body="Some text for article6", username="Tom",
     )
-    await articles_repo.create_article(
+    article7 = ArticleInCreate(
         title="Article7", description="Some desc for article7", body="Some text for article7", username="Tracy",
     )
-    await articles_repo.create_article(
+    article8 = ArticleInCreate(
         title="Article8", description="Some desc for article8", body="Some text for article8", username="Tracy",
     )
+
+    await articles_repo.create_article(article_in_create=article1)
+    await articles_repo.create_article(article_in_create=article2)
+    await articles_repo.create_article(article_in_create=article3)
+    await articles_repo.create_article(article_in_create=article4)
+    await articles_repo.create_article(article_in_create=article5)
+    await articles_repo.create_article(article_in_create=article6)
+    await articles_repo.create_article(article_in_create=article7)
+    await articles_repo.create_article(article_in_create=article8)
 
     articles = await articles_repo.get_articles_by_author_username(username="Bob")
 
