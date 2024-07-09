@@ -21,3 +21,20 @@ class UserInDB(User, IDModelMixin):
 
     def change_password(self, password: str) -> None:
         self.hashed_password = security.get_hashed_password(password, security.generate_salt())
+
+
+class UserInLogin(BaseModel):
+    email: EmailStr
+    password: str
+
+
+class UserInCreate(UserInLogin):
+    username: str
+
+
+class UserInUpdate(BaseModel):
+    username: Optional[str] = None
+    email: Optional[EmailStr] = None
+    password: Optional[str] = None
+    bio: Optional[str] = None
+    image: Optional[HttpUrl] = None
