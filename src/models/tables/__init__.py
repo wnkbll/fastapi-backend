@@ -10,7 +10,6 @@ class UsersTable(Table):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     username: Mapped[str] = mapped_column(String, nullable=False)
     email: Mapped[str] = mapped_column(String, nullable=False)
-    salt: Mapped[str] = mapped_column(String, nullable=False)
     hashed_password: Mapped[str] = mapped_column(String, nullable=False)
     bio: Mapped[str] = mapped_column(Text, nullable=True)
     image: Mapped[str] = mapped_column(String, nullable=True)

@@ -14,12 +14,10 @@ class User(BaseModel):
 
 
 class UserInDB(User, IDModelMixin):
-    salt: str = ""
     hashed_password: str = ""
 
     def verify_password(self, password: str) -> bool:
-        return security.verify_password(password, self.hashed_password)  # TODO: Add security module
+        return security.verify_password(password, self.hashed_password)
 
     def change_password(self, password: str) -> None:
-        self.salt = security.generate_salt()
-        self.hashed_password = security.get_hashed_password(password, self.salt)  # TODO: Add security module
+        self.hashed_password = security.get_hashed_password(password, security.generate_salt())

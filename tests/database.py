@@ -22,6 +22,8 @@ async def main() -> None:
     user_by_username = await user_repo.get_user_by_username(username="Alice")
     user_by_email = await user_repo.get_user_by_email(email="some.address4@gmail.com")
 
+    print(user_by_username.verify_password("123456"))
+    print(user_by_username.verify_password("654321"))
     print(user_by_username.model_dump())
     print(user_by_email.model_dump())
     print("---------------------------------")
@@ -35,6 +37,8 @@ async def main() -> None:
     )
 
     user_by_username = await user_repo.get_user_by_username(username="Joe")
+    print(user_by_username.verify_password("123456"))
+    print(user_by_username.verify_password("654321"))
     print(user_by_username.model_dump())
     print("---------------------------------")
 
