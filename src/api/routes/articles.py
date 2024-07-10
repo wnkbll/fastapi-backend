@@ -1,8 +1,7 @@
-from fastapi import APIRouter, Depends, Body, HTTPException, status
+from fastapi import APIRouter, Body, HTTPException, status
 
-from src.api.dependencies import get_repository
+from src.api.dependencies import ArticlesRepositoryDepends
 from src.db.errors import EntityDoesNotExistError
-from src.db.repositories.articles import ArticlesRepository
 from src.models.schemas.articles import (
     ArticleInCreate,
     ArticleInResponse,
@@ -15,7 +14,7 @@ router = APIRouter()
 
 @router.get("", name="articles:get-all-articles", response_model=ListOfArticlesInResponse)
 async def get_all_articles(
-        articles_repo: ArticlesRepository = Depends(get_repository(ArticlesRepository)),
+        articles_repo: ArticlesRepositoryDepends,
 ) -> ListOfArticlesInResponse:
     try:
         articles = await articles_repo.get_all_articles()
@@ -44,7 +43,7 @@ async def get_all_articles(
 @router.get("/{username}", name="articles:get-all-articles-from-user", response_model=ListOfArticlesInResponse)
 async def get_all_articles_from_user(
         username: str,
-        articles_repo: ArticlesRepository = Depends(get_repository(ArticlesRepository)),
+        articles_repo: ArticlesRepositoryDepends,
 ) -> ListOfArticlesInResponse:
     try:
         articles = await articles_repo.get_articles_by_author_username(username=username)
@@ -72,8 +71,8 @@ async def get_all_articles_from_user(
 
 @router.post("", name="articles:create-article", response_model=ArticleInResponse)
 async def create_article(
+        articles_repo: ArticlesRepositoryDepends,
         article_in_create: ArticleInCreate = Body(alias="article"),
-        articles_repo: ArticlesRepository = Depends(get_repository(ArticlesRepository)),
 ) -> ArticleInResponse:
     try:
         article_in_db = await articles_repo.create_article(article_in_create=article_in_create)
