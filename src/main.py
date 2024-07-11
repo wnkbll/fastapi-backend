@@ -1,9 +1,11 @@
 import sys
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
 
+from src.api.errors import http_error_handler, http422_error_handler
 from src.api.routes import router
 from src.core.config import get_app_settings
 from src.core.environments import EnvironmentTypes, Environment
@@ -55,6 +57,11 @@ def register_events(application: FastAPI) -> None:
     )
 
 
+def register_exceptions_handlers(application: FastAPI) -> None:
+    application.add_exception_handler(HTTPException, http_error_handler)
+    application.add_exception_handler(RequestValidationError, http422_error_handler)
+
+
 def get_application(env_type: EnvironmentTypes) -> FastAPI:
     settings: Environment = get_app_settings(env_type)
     configure_logging(settings)
@@ -64,6 +71,7 @@ def get_application(env_type: EnvironmentTypes) -> FastAPI:
     register_middleware(application, settings)
     register_routers(application, settings)
     register_events(application)
+    register_exceptions_handlers(application)
 
     logger.success("Application was successfully initialized")
 
