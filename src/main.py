@@ -1,11 +1,14 @@
 import sys
+from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
+from pydantic import ValidationError
+from starlette.requests import Request
+from starlette.responses import JSONResponse
 
-from src.api.errors import http_error_handler, http422_error_handler
 from src.api.routes import router
 from src.core.config import get_app_settings
 from src.core.environments import EnvironmentTypes, Environment
@@ -45,33 +48,21 @@ def register_routers(application: FastAPI, settings: Environment) -> None:
     application.include_router(router, prefix=settings.api_prefix)
 
 
-def register_events(application: FastAPI) -> None:
-    application.add_event_handler(
-        "startup",
-        create_start_app_handler()
-    )
-
-    application.add_event_handler(
-        "shutdown",
-        create_stop_app_handler()
-    )
-
-
-def register_exceptions_handlers(application: FastAPI) -> None:
-    application.add_exception_handler(HTTPException, http_error_handler)
-    application.add_exception_handler(RequestValidationError, http422_error_handler)
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    await create_start_app_handler()
+    yield
+    await create_stop_app_handler()
 
 
 def get_application(env_type: EnvironmentTypes) -> FastAPI:
     settings: Environment = get_app_settings(env_type)
     configure_logging(settings)
 
-    application: FastAPI = FastAPI(**settings.fastapi_kwargs.model_dump())
+    application: FastAPI = FastAPI(**settings.fastapi_kwargs.model_dump(), lifespan=lifespan)
 
     register_middleware(application, settings)
     register_routers(application, settings)
-    register_events(application)
-    register_exceptions_handlers(application)
 
     logger.success("Application was successfully initialized")
 
@@ -79,3 +70,15 @@ def get_application(env_type: EnvironmentTypes) -> FastAPI:
 
 
 app: FastAPI = get_application(EnvironmentTypes.dev)
+
+
+@app.exception_handler(HTTPException)
+async def http_exception_handler(_: Request, exc: HTTPException) -> JSONResponse:
+    return JSONResponse({"errors": [exc.detail]}, status_code=exc.status_code)
+
+
+@app.exception_handler(RequestValidationError)
+async def http_exception_handler(
+        _: Request, exc: RequestValidationError | ValidationError
+) -> JSONResponse:
+    return JSONResponse({"errors": [exc.errors()]}, status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
