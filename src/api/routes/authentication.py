@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Body, HTTPException, status
 
 from src.api.dependencies import UsersRepositoryDepends, SettingsDepends
+from src.db.errors import EntityDoesNotExistError
 from src.models.schemas.users import (
     UserInResponse, UserInLogin, UserInCreate, UserWithToken
 )
@@ -11,17 +12,43 @@ router = APIRouter()
 
 @router.post("/login", name="auth:login", response_model=UserInResponse)
 async def login(
-        users_repo: UsersRepositoryDepends,
         settings: SettingsDepends,
+        users_repo: UsersRepositoryDepends,
         user_in_login: UserInLogin = Body(),
 ) -> UserInResponse:
-    pass
+    try:
+        user_in_db = await users_repo.get_user_by_email(email=user_in_login.email)
+    except EntityDoesNotExistError as existence_error:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid username or email",
+        ) from existence_error
+
+    if not user_in_db.verify_password(user_in_login.password):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid username or email",
+        )
+
+    token = jwt.create_access_token_for_user(
+        user_in_db, settings.auth.secret,
+    )
+
+    return UserInResponse(
+        user=UserWithToken(
+            username=user_in_db.username,
+            email=user_in_db.email,
+            bio=user_in_db.bio,
+            image=user_in_db.image,
+            token=token,
+        ),
+    )
 
 
 @router.post("/register", name="auth:register", response_model=UserInResponse)
 async def register(
-        users_repo: UsersRepositoryDepends,
         settings: SettingsDepends,
+        users_repo: UsersRepositoryDepends,
         user_in_create: UserInCreate = Body(alias="user-in-create"),
 ) -> UserInResponse:
     if await auth.is_username_taken(users_repo, user_in_create.username):
