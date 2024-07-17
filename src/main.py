@@ -15,14 +15,6 @@ from src.core.environments import EnvironmentTypes, Environment
 from src.core.events import create_start_app_handler, create_stop_app_handler
 from src.core.paths import LOGGING_DIR
 
-
-@asynccontextmanager
-async def lifespan(_: FastAPI):
-    await create_start_app_handler()
-    yield
-    await create_stop_app_handler()
-
-
 settings: Environment = get_app_settings(EnvironmentTypes.dev)
 
 logger.configure(
@@ -41,12 +33,21 @@ logger.configure(
     ],
 )
 
+
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    await create_start_app_handler()
+    yield
+    await create_stop_app_handler()
+
+
 app: FastAPI = FastAPI(
     **settings.fastapi_kwargs.model_dump(),
     lifespan=lifespan,
 )
 
 app.include_router(router, prefix=settings.api_prefix)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.middleware.allow_origins,
