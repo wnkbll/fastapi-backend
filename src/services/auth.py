@@ -4,7 +4,7 @@ from src.db.repositories.users import UsersRepository
 
 async def is_username_taken(users_repo: UsersRepository, username: str) -> bool:
     try:
-        await users_repo.get_user_by_username(username=username)
+        await users_repo.get(username=username)
     except EntityDoesNotExistError:
         return False
 
@@ -13,7 +13,7 @@ async def is_username_taken(users_repo: UsersRepository, username: str) -> bool:
 
 async def is_email_taken(users_repo: UsersRepository, email: str) -> bool:
     try:
-        await users_repo.get_user_by_email(email=email)
+        await users_repo.get(email=email)
     except EntityDoesNotExistError:
         return False
 

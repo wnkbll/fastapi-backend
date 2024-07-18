@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Body, HTTPException, status
 
-from src.api.dependencies import UsersRepositoryDepends, SettingsDepends
+from src.core.dependencies import UsersRepositoryDepends, SettingsDepends
 from src.db.errors import EntityDoesNotExistError
 from src.models.schemas.users import (
     UserInResponse, UserInLogin, UserInCreate, UserWithToken
