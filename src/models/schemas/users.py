@@ -1,5 +1,3 @@
-from typing import Optional
-
 from pydantic import BaseModel, EmailStr
 
 from src.models.schemas.base import IDModelMixin
@@ -31,9 +29,9 @@ class UserInCreate(UserInLogin):
 
 
 class UserInUpdate(BaseModel):
-    username: Optional[str] = None
-    email: Optional[EmailStr] = None
-    password: Optional[str] = None
+    username: str | None
+    email: EmailStr | None
+    password: str | None
 
 
 class UserWithToken(User):
