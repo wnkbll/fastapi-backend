@@ -42,7 +42,7 @@ class TasksRepository(Repository):
 
             return Task.model_validate(task_row, from_attributes=True)
 
-    async def get_all(self, username: str = None) -> list[Task]:
+    async def get_all(self, *, username: str = None) -> list[Task]:
         query: Executable = (
             select(UsersTable).filter_by(username=username).options(selectinload(UsersTable.tasks))
             if username else
