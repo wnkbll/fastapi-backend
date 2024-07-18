@@ -22,27 +22,24 @@ class UsersTable(Table):
     __tablename__ = "Users"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
-    username: Mapped[str] = mapped_column(String, nullable=False)
-    email: Mapped[str] = mapped_column(String, nullable=False)
+    username: Mapped[str] = mapped_column(String, nullable=False, unique=True)
+    email: Mapped[str] = mapped_column(String, nullable=False, unique=True)
     hashed_password: Mapped[str] = mapped_column(String, nullable=False)
-    bio: Mapped[str] = mapped_column(Text, nullable=True)
-    image: Mapped[str] = mapped_column(String, nullable=True)
 
-    articles: Mapped[list["ArticlesTable"]] = relationship(
+    tasks: Mapped[list["TasksTable"]] = relationship(
         back_populates="user",
     )
 
 
-class ArticlesTable(Table):
-    __tablename__ = "Articles"
+class TasksTable(Table):
+    __tablename = "Tasks"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
-    slug: Mapped[str] = mapped_column(String, unique=True, nullable=False)
-    title: Mapped[str] = mapped_column(String, nullable=False)
-    description: Mapped[str] = mapped_column(Text, nullable=False)
+    title: Mapped[str] = mapped_column(String, nullable=True)
+    description: Mapped[str] = mapped_column(Text, nullable=True)
     body: Mapped[str] = mapped_column(Text, nullable=False)
-    author_id: Mapped[int] = mapped_column(ForeignKey("Users.id", ondelete="CASCADE"), nullable=False)
+    user_id: Mapped[int] = mapped_column(ForeignKey("Users.id", ondelete="CASCADE"), nullable=False)
 
     user: Mapped["UsersTable"] = relationship(
-        back_populates="articles",
+        back_populates="tasks"
     )

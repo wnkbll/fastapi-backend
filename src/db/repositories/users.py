@@ -1,4 +1,4 @@
-from sqlalchemy import select, update, Executable
+from sqlalchemy import select, update, delete, Executable
 
 from src.db.errors import EntityDoesNotExistError
 from src.db.repositories.repository import Repository
@@ -7,31 +7,7 @@ from src.models.tables import UsersTable
 
 
 class UsersRepository(Repository):
-    async def get_user_by_email(self, *, email: str) -> UserInDB:
-        query: Executable = select(UsersTable).where(UsersTable.email == email)
-
-        async with self.session_factory() as session:
-            response = await session.execute(query)
-
-            user_row: UsersTable = response.scalars().first()
-            if user_row is not None:
-                return UserInDB.model_validate(user_row, from_attributes=True)
-
-            raise EntityDoesNotExistError(f"User with email:{email} does not exist")
-
-    async def get_user_by_username(self, *, username: str) -> UserInDB:
-        query: Executable = select(UsersTable).where(UsersTable.username == username)
-
-        async with self.session_factory() as session:
-            response = await session.execute(query)
-
-            user_row: UsersTable = response.scalars().first()
-            if user_row is not None:
-                return UserInDB.model_validate(user_row, from_attributes=True)
-
-            raise EntityDoesNotExistError(f"User with username:{username} does not exist")
-
-    async def create_user(self, *, user_in_create: UserInCreate) -> UserInDB:
+    async def create(self, *, user_in_create: UserInCreate) -> UserInDB:
         user_in_db = UserInDB(username=user_in_create.username, email=user_in_create.email)
         user_in_db.change_password(user_in_create.password)
 
@@ -45,13 +21,32 @@ class UsersRepository(Repository):
 
         return user_in_db.model_validate(user_row, from_attributes=True)
 
-    async def update_user(self, *, username: str, user_in_update: UserInUpdate) -> UserInDB:
-        user_to_change = await self.get_user_by_username(username=username)
+    async def get(self, *, username: str = None, email: str = None) -> UserInDB:
+        if all((username is None, email is None)):
+            raise ValueError("Username and email both are None. You should provide one them.")
+
+        query: Executable = (
+            select(UsersTable).filter_by(username=username)
+            if username else
+            select(UsersTable).filter_by(email=email)
+        )
+
+        async with self.session_factory() as session:
+            response = await session.execute(query)
+
+            user_row: UsersTable = response.scalars().first()
+            if user_row is not None:
+                return UserInDB.model_validate(user_row, from_attributes=True)
+
+            raise EntityDoesNotExistError(
+                f"User with {"username" if username else "email"}:{username if username else email} does not exist"
+            )
+
+    async def update(self, *, username: str, user_in_update: UserInUpdate) -> UserInDB:
+        user_to_change = await self.get(username=username)
 
         user_to_change.username = user_in_update.username or user_to_change.username
         user_to_change.email = user_in_update.email or user_to_change.email
-        user_to_change.bio = user_in_update.bio or user_to_change.bio
-        user_to_change.image = user_in_update.image or user_to_change.image
 
         if user_in_update.password:
             user_to_change.change_password(user_in_update.password)
@@ -61,8 +56,6 @@ class UsersRepository(Repository):
             values(
                 username=user_to_change.username,
                 email=user_to_change.email,
-                bio=user_to_change.bio,
-                image=user_to_change.image,
                 hashed_password=user_to_change.hashed_password,
             ).
             filter_by(username=username)
@@ -73,3 +66,21 @@ class UsersRepository(Repository):
             await session.commit()
 
         return user_to_change
+
+    async def delete(self, *, username: str = None, email: str = None) -> UserInDB:
+        if all((username is None, email is None)):
+            raise ValueError("Username and email both are None. You should provide one them.")
+
+        user_in_db = await self.get(username=username) if username else await self.get(email=email)
+
+        query: Executable = (
+            delete(UsersTable).filter_by(username=username)
+            if username else
+            delete(UsersTable).filter_by(email=email)
+        )
+
+        async with self.session_factory() as session:
+            await session.execute(query)
+            await session.commit()
+
+        return user_in_db

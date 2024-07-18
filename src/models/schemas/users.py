@@ -1,6 +1,6 @@
 from typing import Optional
 
-from pydantic import BaseModel, EmailStr, HttpUrl
+from pydantic import BaseModel, EmailStr
 
 from src.models.schemas.base import IDModelMixin
 from src.services import security
@@ -9,8 +9,6 @@ from src.services import security
 class User(BaseModel):
     username: str
     email: EmailStr
-    bio: Optional[str] = ""
-    image: Optional[HttpUrl] = None
 
 
 class UserInDB(User, IDModelMixin):
@@ -36,8 +34,6 @@ class UserInUpdate(BaseModel):
     username: Optional[str] = None
     email: Optional[EmailStr] = None
     password: Optional[str] = None
-    bio: Optional[str] = None
-    image: Optional[HttpUrl] = None
 
 
 class UserWithToken(User):
