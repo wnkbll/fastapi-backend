@@ -16,8 +16,8 @@ class Task(BaseModel, IDModelMixin):
 
 
 class TaskInCreate(BaseModel):
-    title: str
-    description: str
+    title: str | None
+    description: str | None
     body: str
     deadline: datetime
     username: str
