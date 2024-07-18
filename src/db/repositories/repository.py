@@ -16,6 +16,9 @@ class Repository:
     async def get(self, **kwargs) -> BaseModel:
         raise NotImplementedError
 
+    async def get_all(self) -> list[BaseModel]:
+        raise NotImplementedError
+
     async def update(self, **kwargs) -> BaseModel:
         raise NotImplementedError
 

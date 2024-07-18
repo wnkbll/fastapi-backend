@@ -42,6 +42,20 @@ class UsersRepository(Repository):
                 f"User with {"username" if username else "email"}:{username if username else email} does not exist"
             )
 
+    async def get_all(self) -> list[UserInDB]:
+        query: Executable = select(UsersTable)
+
+        async with self.session_factory() as session:
+            response = await session.execute(query)
+            users_ = response.scalars().all()
+
+            if users_ is None:
+                raise EntityDoesNotExistError("List of users is empty")
+
+            return [
+                UserInDB.model_validate(user, from_attributes=True) for user in users_
+            ]
+
     async def update(self, *, username: str, user_in_update: UserInUpdate) -> UserInDB:
         user_to_change = await self.get(username=username)
 
