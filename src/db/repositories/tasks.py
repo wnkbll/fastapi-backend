@@ -1,4 +1,4 @@
-from sqlalchemy import select, Executable
+from sqlalchemy import select, update, Executable
 from sqlalchemy.orm import selectinload
 
 from src.db.errors import EntityDoesNotExistError
@@ -72,7 +72,29 @@ class TasksRepository(Repository):
             ]
 
     async def update(self, *, id_: int, task_in_update: TaskInUpdate) -> Task:
-        pass
+        task_to_change = await self.get(id_=id_)
+
+        task_to_change.title = task_in_update.title or task_to_change.title
+        task_to_change.description = task_in_update.description or task_to_change.description
+        task_to_change.body = task_in_update.body or task_to_change.body
+        task_to_change.deadline = task_in_update.deadline or task_to_change.deadline
+
+        query: Executable = (
+            update(UsersTable).
+            values(
+                title=task_to_change.username,
+                description=task_to_change.email,
+                body=task_to_change.hashed_password,
+                deadline=task_to_change.deadline,
+            ).
+            filter_by(id=id_)
+        )
+
+        async with self.session_factory() as session:
+            await session.execute(query)
+            await session.commit()
+
+        return task_to_change
 
     async def delete(self, *, id_: int) -> Task:
         pass

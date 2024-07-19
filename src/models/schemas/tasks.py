@@ -28,7 +28,6 @@ class TaskInUpdate(BaseModel):
     description: str | None
     body: str | None
     deadline: datetime | None
-    username: str
 
 
 class TaskInResponse(BaseModel):
