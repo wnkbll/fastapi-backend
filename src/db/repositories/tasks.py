@@ -43,16 +43,18 @@ class TasksRepository(Repository):
             return Task.model_validate(task_row, from_attributes=True)
 
     async def get_all(self, *, username: str = None) -> list[Task]:
+        username_is_none = username is None
+
         query: Executable = (
             select(UsersTable).filter_by(username=username).options(selectinload(UsersTable.tasks))
-            if username else
+            if not username_is_none else
             select(TasksTable)
         )
 
         async with self.session_factory() as session:
             response = await session.execute(query)
 
-            if username is None:
+            if not username_is_none:
                 user_with_tasks = response.scalars().first()
 
                 if user_with_tasks is None:
@@ -80,11 +82,11 @@ class TasksRepository(Repository):
         task_to_change.deadline = task_in_update.deadline or task_to_change.deadline
 
         query: Executable = (
-            update(UsersTable).
+            update(TasksTable).
             values(
-                title=task_to_change.username,
-                description=task_to_change.email,
-                body=task_to_change.hashed_password,
+                title=task_to_change.title,
+                description=task_to_change.description,
+                body=task_to_change.body,
                 deadline=task_to_change.deadline,
             ).
             filter_by(id=id_)

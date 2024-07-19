@@ -43,11 +43,10 @@ class DatabaseConnection:
             logger.info("All tables was created")
 
     async def init_db(self) -> None:
-        async with self.engine.begin() as connection:
-            if self._env_type == EnvironmentTypes.test:
-                await self.drop_all_tables()
-            await self.create_all_tables()
-            logger.info("Database was initialized")
+        if self._env_type == EnvironmentTypes.test:
+            await self.drop_all_tables()
+        await self.create_all_tables()
+        logger.info("Database was initialized")
 
     async def dispose_engine(self) -> None:
         await self.engine.dispose()

@@ -34,7 +34,7 @@ class UsersTable(Table):
 
 
 class TasksTable(Table):
-    __tablename = "Tasks"
+    __tablename__ = "Tasks"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     title: Mapped[str] = mapped_column(String, nullable=True)

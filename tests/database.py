@@ -1,11 +1,12 @@
 import asyncio
+from datetime import datetime
 
 from src.core.environments import EnvironmentTypes
 from src.db.connection import get_db_connection
-from src.db.repositories.articles import ArticlesRepository
+from src.db.repositories.tasks import TasksRepository
 from src.db.repositories.users import UsersRepository
+from src.models.schemas.tasks import TaskInCreate, TaskInUpdate
 from src.models.schemas.users import UserInCreate, UserInUpdate
-from src.models.schemas.articles import ArticleInCreate
 
 
 async def main() -> None:
@@ -13,7 +14,7 @@ async def main() -> None:
     await db_connection.init_db()
 
     users_repo = UsersRepository(db_connection.session_factory)
-    articles_repo = ArticlesRepository(db_connection.session_factory)
+    task_repo = TasksRepository(db_connection.session_factory)
 
     user1 = UserInCreate(username="Bob", email="some.address1@gmail.com", password="123456")
     user2 = UserInCreate(username="Man", email="some.address2@gmail.com", password="123456")
@@ -21,14 +22,14 @@ async def main() -> None:
     user4 = UserInCreate(username="Tracy", email="some.address4@gmail.com", password="123456")
     user5 = UserInCreate(username="Tom", email="some.address5@gmail.com", password="123456")
 
-    await users_repo.create_user(user_in_create=user1)
-    await users_repo.create_user(user_in_create=user2)
-    await users_repo.create_user(user_in_create=user3)
-    await users_repo.create_user(user_in_create=user4)
-    await users_repo.create_user(user_in_create=user5)
+    await users_repo.create(user_in_create=user1)
+    await users_repo.create(user_in_create=user2)
+    await users_repo.create(user_in_create=user3)
+    await users_repo.create(user_in_create=user4)
+    await users_repo.create(user_in_create=user5)
 
-    user_by_username = await users_repo.get_user_by_username(username="Alice")
-    user_by_email = await users_repo.get_user_by_email(email="some.address4@gmail.com")
+    user_by_username = await users_repo.get(username="Alice")
+    user_by_email = await users_repo.get(email="some.address4@gmail.com")
 
     print(user_by_username.verify_password("123456"))
     print(user_by_username.verify_password("654321"))
@@ -43,55 +44,79 @@ async def main() -> None:
         bio="some text about me"
     )
 
-    await users_repo.update_user(
+    await users_repo.update(
         username=user_by_username.username,
         user_in_update=user_in_update,
     )
 
-    user_by_username = await users_repo.get_user_by_username(username="Joe")
+    user_by_username = await users_repo.get(username="Joe")
     print(user_by_username.verify_password("123456"))
     print(user_by_username.verify_password("654321"))
     print(user_by_username.model_dump())
     print("---------------------------------")
 
-    article1 = ArticleInCreate(
-        title="Article1", description="Some desc for article1", body="Some text for article1", username="Man",
+    users = await users_repo.get_all()
+    for user in users:
+        print(user.model_dump())
+    print("---------------------------------")
+
+    task1 = TaskInCreate(
+        title="Task1", description="Some desc for task1",
+        body="Some text for task1", deadline=datetime(2024, 8, 1, 0, 0, 0), username="Man",
     )
-    article2 = ArticleInCreate(
-        title="Article2", description="Some desc for article2", body="Some text for article2", username="Man",
+    task2 = TaskInCreate(
+        title="Task2", description="Some desc for task2",
+        body="Some text for task2", deadline=datetime(2024, 8, 2, 0, 0, 0), username="Man",
     )
-    article3 = ArticleInCreate(
-        title="Article3", description="Some desc for article3", body="Some text for article3", username="Bob",
+    task3 = TaskInCreate(
+        title="Task3", description="Some desc for task3",
+        body="Some text for task3", deadline=datetime(2024, 8, 3, 0, 0, 0), username="Bob",
     )
-    article4 = ArticleInCreate(
-        title="Article4", description="Some desc for article4", body="Some text for article4", username="Bob",
+    task4 = TaskInCreate(
+        title="Task4", description="Some desc for task4",
+        body="Some text for task4", deadline=datetime(2024, 8, 4, 0, 0, 0), username="Bob",
     )
-    article5 = ArticleInCreate(
-        title="Article5", description="Some desc for article5", body="Some text for article5", username="Bob",
+    task5 = TaskInCreate(
+        title="Task5", description="Some desc for task5",
+        body="Some text for task5", deadline=datetime(2024, 8, 5, 0, 0, 0), username="Bob",
     )
-    article6 = ArticleInCreate(
-        title="Article6", description="Some desc for article6", body="Some text for article6", username="Tom",
+    task6 = TaskInCreate(
+        title="Task6", description="Some desc for task6",
+        body="Some text for task6", deadline=datetime(2024, 8, 6, 0, 0, 0), username="Tom",
     )
-    article7 = ArticleInCreate(
-        title="Article7", description="Some desc for article7", body="Some text for article7", username="Tracy",
+    task7 = TaskInCreate(
+        title="Task7", description="Some desc for task7",
+        body="Some text for task7", deadline=datetime(2024, 8, 7, 0, 0, 0), username="Tracy",
     )
-    article8 = ArticleInCreate(
-        title="Article8", description="Some desc for article8", body="Some text for article8", username="Tracy",
+    task8 = TaskInCreate(
+        title="Task8", description="Some desc for task8",
+        body="Some text for task8", deadline=datetime(2024, 8, 8, 0, 0, 0), username="Tracy",
     )
 
-    await articles_repo.create_article(article_in_create=article1)
-    await articles_repo.create_article(article_in_create=article2)
-    await articles_repo.create_article(article_in_create=article3)
-    await articles_repo.create_article(article_in_create=article4)
-    await articles_repo.create_article(article_in_create=article5)
-    await articles_repo.create_article(article_in_create=article6)
-    await articles_repo.create_article(article_in_create=article7)
-    await articles_repo.create_article(article_in_create=article8)
+    await task_repo.create(task_in_create=task1)
+    await task_repo.create(task_in_create=task2)
+    await task_repo.create(task_in_create=task3)
+    await task_repo.create(task_in_create=task4)
+    await task_repo.create(task_in_create=task5)
+    await task_repo.create(task_in_create=task6)
+    await task_repo.create(task_in_create=task7)
+    await task_repo.create(task_in_create=task8)
 
-    articles = await articles_repo.get_articles_by_author_username(username="Bob")
+    tasks = await task_repo.get_all(username="Bob")
+    for task in tasks:
+        print(task.model_dump())
+    print("---------------------------------")
 
-    for article in articles:
-        print(article.model_dump())
+    task_in_update = TaskInUpdate(
+        title="UpdatedTitleForTask7",
+        deadline=datetime(2024, 8, 15, 0, 0, 0)
+    )
+    task_to_update = await task_repo.get(id_=7)
+    await task_repo.update(id_=task_to_update.id_, task_in_update=task_in_update)
+
+    tasks = await task_repo.get_all()
+    for task in tasks:
+        print(task.model_dump())
     print("---------------------------------")
 
 

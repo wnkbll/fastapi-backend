@@ -1,11 +1,12 @@
 from datetime import datetime
+from typing import Optional
 
 from pydantic import BaseModel
 
 from src.models.schemas.base import IDModelMixin
 
 
-class Task(BaseModel, IDModelMixin):
+class Task(IDModelMixin):
     title: str
     description: str
     body: str
@@ -24,10 +25,10 @@ class TaskInCreate(BaseModel):
 
 
 class TaskInUpdate(BaseModel):
-    title: str | None
-    description: str | None
-    body: str | None
-    deadline: datetime | None
+    title: str | None = None
+    description: str | None = None
+    body: str | None = None
+    deadline: datetime | None = None
 
 
 class TaskInResponse(BaseModel):
