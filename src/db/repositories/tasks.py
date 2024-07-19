@@ -1,4 +1,4 @@
-from sqlalchemy import select, update, Executable
+from sqlalchemy import select, update, delete, Executable
 from sqlalchemy.orm import selectinload
 
 from src.db.errors import EntityDoesNotExistError
@@ -97,4 +97,12 @@ class TasksRepository(Repository):
         return task_to_change
 
     async def delete(self, *, id_: int) -> Task:
-        pass
+        task_in_db = await self.get(id_=id_)
+
+        query: Executable = delete(TasksTable).filter_by(id=id_)
+
+        async with self.session_factory() as session:
+            await session.execute(query)
+            await session.commit()
+
+        return task_in_db
