@@ -6,6 +6,7 @@ from src.core.config import get_app_settings
 from src.core.environments import Environment, EnvironmentTypes
 from src.db.connection import get_db_connection
 from src.db.repositories.repository import Repository
+from src.db.repositories.tasks import TasksRepository
 from src.db.repositories.users import UsersRepository
 
 
@@ -22,5 +23,6 @@ def get_settings() -> Environment:
 
 
 UsersRepositoryDepends = Annotated[UsersRepository, Depends(get_repository(UsersRepository))]
+TasksRepositoryDepends = Annotated[TasksRepository, Depends(get_repository(TasksRepository))]
 
 SettingsDepends = Annotated[Environment, Depends(get_settings)]
