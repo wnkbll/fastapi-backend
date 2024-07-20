@@ -42,7 +42,7 @@ class TasksRepository(Repository):
 
             return Task.model_validate(task_row, from_attributes=True)
 
-    async def get_all(self, *, username: str = None) -> list[Task]:
+    async def get_all(self, *, username: str | None = None) -> list[Task]:
         username_is_none = username is None
 
         query: Executable = (
