@@ -93,7 +93,7 @@ async def update_task(
 @router.delete(
     "/{id: int}", name="task:delete-task", response_model=TaskInResponse
 )
-async def update_task(
+async def delete_task(
         id_: int,
         tasks_repo: TasksRepositoryDepends,
 ) -> TaskInResponse:
