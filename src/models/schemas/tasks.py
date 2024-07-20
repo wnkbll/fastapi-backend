@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Optional
 
 from pydantic import BaseModel
 
@@ -11,6 +10,7 @@ class Task(IDModelMixin):
     description: str
     body: str
     deadline: datetime
+    is_complete: bool
     created_at: datetime
     updated_at: datetime
     user_id: int
@@ -29,6 +29,7 @@ class TaskInUpdate(BaseModel):
     description: str | None = None
     body: str | None = None
     deadline: datetime | None = None
+    is_complete: bool | None = None
 
 
 class TaskInResponse(BaseModel):

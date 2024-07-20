@@ -80,6 +80,7 @@ class TasksRepository(Repository):
         task_to_change.description = task_in_update.description or task_to_change.description
         task_to_change.body = task_in_update.body or task_to_change.body
         task_to_change.deadline = task_in_update.deadline or task_to_change.deadline
+        task_to_change.is_complete = task_in_update.is_complete or task_to_change.is_complete
 
         query: Executable = (
             update(TasksTable).
@@ -88,6 +89,7 @@ class TasksRepository(Repository):
                 description=task_to_change.description,
                 body=task_to_change.body,
                 deadline=task_to_change.deadline,
+                is_complete=task_to_change.is_complete,
             ).
             filter_by(id=id_)
         )
