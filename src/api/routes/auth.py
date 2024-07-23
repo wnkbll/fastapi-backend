@@ -1,9 +1,12 @@
 from fastapi import APIRouter, Body, HTTPException, status
 
 from src.api.dependencies import UsersRepositoryDepends, SettingsDepends
-from depricated.src.db.errors import EntityDoesNotExistError
-from src.models.schemas.users import (
-    UserInResponse, UserInLogin, UserInCreate, UserWithToken
+from src.db.errors import EntityDoesNotExistError
+from src.models.users import (
+    UserInResponse,
+    UserInLogin,
+    UserInCreate,
+    UserWithToken,
 )
 from src.services import auth, jwt
 

@@ -3,8 +3,8 @@ from datetime import datetime, timedelta, UTC
 import jwt
 from pydantic import ValidationError
 
-from src.models.schemas.jwt import JWTMeta, JWTUser
-from src.models.schemas.users import User
+from src.models.jwt import JWTMeta, JWTUser
+from src.models.users import User
 
 JWT_SUBJECT = "access"
 ALGORITHM = "HS256"

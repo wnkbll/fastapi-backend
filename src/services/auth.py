@@ -1,5 +1,5 @@
-from depricated.src.db.errors import EntityDoesNotExistError
-from depricated.src.db import UsersRepository
+from src.db.errors import EntityDoesNotExistError
+from src.db.repositories.users import UsersRepository
 
 
 async def is_username_taken(users_repo: UsersRepository, username: str) -> bool:

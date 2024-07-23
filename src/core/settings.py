@@ -38,7 +38,7 @@ class FastAPISettings(BaseModel):
     openapi_url: str = "/openapi.json"
     redoc_url: str = "/redoc"
     title: str = "FastAPI pet project"
-    version: str = "0.0.0"
+    version: str = "0.1.0"
 
 
 class LoggingSettings(BaseModel):
