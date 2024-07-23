@@ -14,22 +14,22 @@ Run the following commands to pull this repo from github and get to src folder:
 git clone https://github.com/wnkbll/fastapi-backend.git
 cd fastapi-backend
 ```
-Create the ```.env.prod``` file or modify the ```.env.example``` file:
+Create the ```.env.prod``` file or rename the ```.env.example``` file and put there this values:
 ```
-DB_HOST=db
-DB_PORT=1221
-DB_NAME=postgres
-DB_USER=postgres
-DB_PASS=postgres
+DB_HOST=db                    # name of postgres container defined in docker-compose.yml file
+DB_PORT=1221                  # port of postgres container defined in docker-compose.yml file
+DB_NAME=postgres              # database name defined in POSTGRES_DB variable
+DB_USER=postgres              # superuser's name defined in POSTGRES_USER variable
+DB_PASS=postgres              # superuser's password defined in POSTGRES_PASSWORD variable
 
-POSTGRES_DB=postgres
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=postgres
+POSTGRES_DB=postgres          # postgres variable with defenition of database name
+POSTGRES_USER=postgres        # postgres variable with defenition of superuser's name
+POSTGRES_PASSWORD=postgres    # postgres variable with defenition of superuser's password
 
-REDIS_HOST=redis
-REDIS_PORT=5370
+REDIS_HOST=redis              # name of redis container defined in docker-compose.yml file
+REDIS_PORT=5370               # port of redis container defined in docker-compose.yml file
 
-SECRET_KEY=secret
+SECRET_KEY=secret             # secret str using for creating jwt
 ```
 
 ### Run With Docker
