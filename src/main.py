@@ -42,7 +42,7 @@ def get_application() -> FastAPI:
         ],
     )
 
-    application: FastAPI = FastAPI(**settings.fastapi_kwargs)
+    application: FastAPI = FastAPI(**settings.fastapi_kwargs, lifespan=lifespan)
 
     application.include_router(router, prefix=settings.api_prefix)
 

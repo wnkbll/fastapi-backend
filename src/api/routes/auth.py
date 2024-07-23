@@ -20,7 +20,7 @@ async def login(
         user_in_login: UserInLogin = Body(),
 ) -> UserInResponse:
     try:
-        user_in_db = await users_repo.get_user_by_email(email=user_in_login.email)
+        user_in_db = await users_repo.get(email=user_in_login.email)
     except EntityDoesNotExistError as existence_error:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -34,15 +34,13 @@ async def login(
         )
 
     token = jwt.create_access_token_for_user(
-        user_in_db, settings.auth.secret,
+        user_in_db, settings.auth.secret_key,
     )
 
     return UserInResponse(
         user=UserWithToken(
             username=user_in_db.username,
             email=user_in_db.email,
-            bio=user_in_db.bio,
-            image=user_in_db.image,
             token=token,
         ),
     )
@@ -66,18 +64,16 @@ async def register(
             detail="This email is already taken.",
         )
 
-    user_in_db = await users_repo.create_user(user_in_create=user_in_create)
+    user_in_db = await users_repo.create(user_in_create=user_in_create)
 
     token = jwt.create_access_token_for_user(
-        user_in_db, settings.auth.secret,
+        user_in_db, settings.auth.secret_key,
     )
 
     return UserInResponse(
         user=UserWithToken(
             username=user_in_db.username,
             email=user_in_db.email,
-            bio=user_in_db.bio,
-            image=user_in_db.image,
             token=token,
         ),
     )

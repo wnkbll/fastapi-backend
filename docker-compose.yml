@@ -23,6 +23,8 @@ services:
     command: ["/app/scripts/start.sh"]
     env_file:
       - .env.prod
+    ports:
+      - 9999:8000
     depends_on:
       - db
       - redis
