@@ -4,12 +4,12 @@ from alembic import context
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
-from src.core.config import get_app_settings
-from src.core.environments import EnvironmentTypes
+from depricated.src.core import get_app_settings
+from depricated.src.core import EnvironmentTypes
 from src.models.tables import Table
 
 SETTINGS = get_app_settings(EnvironmentTypes.dev)
-DATABASE_URL = SETTINGS.database.url
+DATABASE_URL = SETTINGS.postgres.url
 
 config = context.config
 

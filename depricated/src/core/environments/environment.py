@@ -1,6 +1,6 @@
 from enum import Enum
 
-from pydantic import BaseModel, PostgresDsn, SecretStr
+from pydantic import BaseModel, PostgresDsn, SecretStr, RedisDsn
 from pydantic_settings import BaseSettings
 
 
@@ -26,9 +26,14 @@ class LoggingSettings(BaseModel):
     compression: str
 
 
-class DatabaseSettings(BaseModel):
+class PostgresSettings(BaseModel):
     url: PostgresDsn
     test_url: PostgresDsn
+
+
+class RedisSettings(BaseModel):
+    url: RedisDsn
+    test_url: RedisDsn
 
 
 class AuthSettings(BaseModel):
@@ -46,7 +51,8 @@ class Environment(BaseSettings):
     env_type: EnvironmentTypes
     fastapi_kwargs: FastAPIKwargs
     logging: LoggingSettings
-    database: DatabaseSettings
+    postgres: PostgresSettings
+    redis: RedisSettings
     auth: AuthSettings
     middleware: MiddlewareSettings
 

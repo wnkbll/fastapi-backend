@@ -1,16 +1,17 @@
 from dotenv import dotenv_values
-from pydantic import PostgresDsn, SecretStr
+from pydantic import PostgresDsn, SecretStr, RedisDsn
 
-from src.core.environments.environment import (
+from depricated.src.core import (
     FastAPIKwargs,
     LoggingSettings,
-    DatabaseSettings,
+    PostgresSettings,
+    RedisSettings,
     AuthSettings,
     MiddlewareSettings,
     Environment,
     EnvironmentTypes,
 )
-from src.core.paths import ENV_PATH
+from depricated.src.core import ENV_PATH
 
 env_values = dotenv_values(ENV_PATH)
 
@@ -31,9 +32,14 @@ class DevLoggingSettings(LoggingSettings):
     compression: str = "zip"
 
 
-class DevDatabaseSettings(DatabaseSettings):
+class DevPostgresSettings(PostgresSettings):
     url: PostgresDsn = env_values["DATABASE_URL"]
     test_url: PostgresDsn = env_values["TEST_DATABASE_URL"]
+
+
+class DevRedisSettings(RedisSettings):
+    url: RedisDsn = env_values["REDIS_URL"]
+    test_url: RedisDsn = env_values["TEST_REDIS_URL"]
 
 
 class DevAuthSettings(AuthSettings):
@@ -51,7 +57,8 @@ class DevelopmentEnvironment(Environment):
     env_type: EnvironmentTypes = EnvironmentTypes.dev
     fastapi_kwargs: FastAPIKwargs = DevFastAPIKwargs()
     logging: LoggingSettings = DevLoggingSettings()
-    database: DatabaseSettings = DevDatabaseSettings()
+    postgres: PostgresSettings = DevPostgresSettings()
+    redis: RedisSettings = DevRedisSettings()
     auth: AuthSettings = DevAuthSettings()
     middleware: MiddlewareSettings = DevMiddlewareSettings()
 

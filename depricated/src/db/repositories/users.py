@@ -1,7 +1,7 @@
 from sqlalchemy import select, update, delete, Executable
 
-from src.db.errors import EntityDoesNotExistError
-from src.db.repositories.repository import Repository
+from depricated.src.db.errors import EntityDoesNotExistError
+from depricated.src.db.repositories.repository import Repository
 from src.models.schemas.users import UserInDB, UserInCreate, UserInUpdate
 from src.models.tables import UsersTable
 

@@ -4,8 +4,8 @@ from loguru import logger
 from pydantic import PostgresDsn
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
 
-from src.core.config import get_app_settings
-from src.core.environments import Environment, EnvironmentTypes
+from depricated.src.core import get_app_settings
+from depricated.src.core import Environment, EnvironmentTypes
 from src.models.tables import Table
 
 
@@ -13,7 +13,7 @@ class DatabaseConnection:
     def __init__(self, settings: Environment):
         self._env_type: EnvironmentTypes = settings.env_type
         self._url: PostgresDsn = (
-            settings.database.test_url if self._env_type == EnvironmentTypes.test else settings.database.url
+            settings.postgres.test_url if self._env_type == EnvironmentTypes.test else settings.postgres.url
         )
         self._engine: AsyncEngine = create_async_engine(self.url)
         self._session_factory: async_sessionmaker[AsyncSession] = async_sessionmaker(
@@ -54,7 +54,7 @@ class DatabaseConnection:
 
 
 @lru_cache
-def get_db_connection(env_type: EnvironmentTypes = EnvironmentTypes.dev):
+def get_postgres_connection(env_type: EnvironmentTypes = EnvironmentTypes.dev):
     settings = get_app_settings(env_type)
     db_connection = DatabaseConnection(settings)
     return db_connection

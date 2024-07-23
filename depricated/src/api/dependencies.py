@@ -2,17 +2,17 @@ from typing import Callable, Annotated
 
 from fastapi import Depends
 
-from src.core.config import get_app_settings
-from src.core.environments import Environment, EnvironmentTypes
-from src.db.connection import get_db_connection
-from src.db.repositories.repository import Repository
-from src.db.repositories.tasks import TasksRepository
-from src.db.repositories.users import UsersRepository
+from depricated.src.core import get_app_settings
+from depricated.src.core import Environment, EnvironmentTypes
+from depricated.src.db import get_postgres_connection
+from depricated.src.db.repositories.repository import Repository
+from depricated.src.db import TasksRepository
+from depricated.src.db import UsersRepository
 
 
 def get_repository(repository: type[Repository]) -> Callable[[], Repository]:
     def __get_repo() -> Repository:
-        db_connection = get_db_connection()
+        db_connection = get_postgres_connection()
         return repository(db_connection.session_factory)
 
     return __get_repo

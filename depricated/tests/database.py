@@ -1,16 +1,16 @@
 import asyncio
 from datetime import datetime
 
-from src.core.environments import EnvironmentTypes
-from src.db.connection import get_db_connection
-from src.db.repositories.tasks import TasksRepository
-from src.db.repositories.users import UsersRepository
+from depricated.src.core import EnvironmentTypes
+from depricated.src.db import get_postgres_connection
+from depricated.src.db import TasksRepository
+from depricated.src.db import UsersRepository
 from src.models.schemas.tasks import TaskInCreate, TaskInUpdate
 from src.models.schemas.users import UserInCreate, UserInUpdate
 
 
 async def main() -> None:
-    db_connection = get_db_connection(EnvironmentTypes.test)
+    db_connection = get_postgres_connection(EnvironmentTypes.test)
     await db_connection.init_db()
 
     users_repo = UsersRepository(db_connection.session_factory)

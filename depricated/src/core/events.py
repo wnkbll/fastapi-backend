@@ -1,11 +1,11 @@
-from src.db.connection import get_db_connection
+from depricated.src.db import get_postgres_connection
 
 
 async def create_start_app_handler() -> None:
-    db_connection = get_db_connection()
+    db_connection = get_postgres_connection()
     await db_connection.init_db()
 
 
 async def create_stop_app_handler() -> None:
-    db_connection = get_db_connection()
+    db_connection = get_postgres_connection()
     await db_connection.dispose_engine()

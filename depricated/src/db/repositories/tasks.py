@@ -1,8 +1,10 @@
+from datetime import datetime, timedelta, UTC
+
 from sqlalchemy import select, update, delete, Executable
 from sqlalchemy.orm import selectinload
 
-from src.db.errors import EntityDoesNotExistError
-from src.db.repositories.repository import Repository
+from depricated.src.db.errors import EntityDoesNotExistError
+from depricated.src.db.repositories.repository import Repository
 from src.models.schemas.tasks import Task, TaskInCreate, TaskInUpdate
 from src.models.tables import TasksTable, UsersTable
 
@@ -42,12 +44,14 @@ class TasksRepository(Repository):
 
             return Task.model_validate(task_row, from_attributes=True)
 
-    async def get_all(self, *, username: str | None = None) -> list[Task]:
+    async def get_all(self, *, username: str | None = None, sort_by_deadline: bool = False) -> list[Task]:
         username_is_none = username is None
 
         query: Executable = (
             select(UsersTable).filter_by(username=username).options(selectinload(UsersTable.tasks))
             if not username_is_none else
+            select(TasksTable).where(TasksTable.deadline - datetime.now(UTC) <= timedelta(days=3))
+            if sort_by_deadline else
             select(TasksTable)
         )
 
@@ -64,13 +68,13 @@ class TasksRepository(Repository):
                     Task.model_validate(task, from_attributes=True) for task in user_with_tasks.tasks
                 ]
 
-            tasks_ = response.scalars().all()
+            tasks = response.scalars().all()
 
-            if tasks_ is None:
+            if tasks is None:
                 raise EntityDoesNotExistError("List of tasks is empty")
 
             return [
-                Task.model_validate(task, from_attributes=True) for task in tasks_
+                Task.model_validate(task, from_attributes=True) for task in tasks
             ]
 
     async def update(self, *, id_: int, task_in_update: TaskInUpdate) -> Task:

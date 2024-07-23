@@ -10,10 +10,10 @@ from starlette.requests import Request
 from starlette.responses import JSONResponse
 
 from src.api.routes import router
-from src.core.config import get_app_settings
-from src.core.environments import EnvironmentTypes, Environment
-from src.core.events import create_start_app_handler, create_stop_app_handler
-from src.core.paths import LOGGING_DIR
+from depricated.src.core import get_app_settings
+from depricated.src.core import EnvironmentTypes, Environment
+from depricated.src.core import create_start_app_handler, create_stop_app_handler
+from depricated.src.core import LOGGING_DIR
 
 settings: Environment = get_app_settings(EnvironmentTypes.dev)
 

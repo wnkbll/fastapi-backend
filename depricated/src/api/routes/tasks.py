@@ -2,8 +2,8 @@ from typing import Annotated
 
 from fastapi import APIRouter, HTTPException, status, Body
 
-from src.core.dependencies import TasksRepositoryDepends
-from src.db.errors import EntityDoesNotExistError
+from src.api.dependencies import TasksRepositoryDepends
+from depricated.src.db.errors import EntityDoesNotExistError
 from src.models.schemas.tasks import TaskInResponse, TasksInResponse, TaskInCreate, TaskInUpdate
 
 router = APIRouter()
