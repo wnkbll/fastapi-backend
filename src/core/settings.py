@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field, PostgresDsn, RedisDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from src.core.paths import ENV_PATH
 
 
 class AuthSettings(BaseSettings):

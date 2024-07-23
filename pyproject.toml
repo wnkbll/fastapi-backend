@@ -1,5 +1,6 @@
 [tool.poetry]
-name = "fastapi-server"
+package-mode = false
+name = "fastapi-backend"
 version = "0.1.0"
 description = ""
 authors = ["wnkbll <arzhevitin.g@gmail.com>"]
