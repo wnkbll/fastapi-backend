@@ -1,30 +1,28 @@
 from pydantic import BaseModel, Field, PostgresDsn, RedisDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from src.core.paths import ENV_PATH
+from src.core.paths import DEV_ENV_PATH as ENV_PATH
+
+settings_config_dict = SettingsConfigDict(
+    env_file=ENV_PATH, env_file_encoding='utf-8', validate_default=False, extra="ignore",
+)
 
 
 class AuthSettings(BaseSettings):
-    model_config = SettingsConfigDict(
-        env_file=ENV_PATH, env_file_encoding='utf-8', validate_default=False, extra="ignore",
-    )
+    model_config = settings_config_dict
 
     secret_key: str = Field(validation_alias="SECRET_KEY")
 
 
 class RedisSettings(BaseSettings):
-    model_config = SettingsConfigDict(
-        env_file=ENV_PATH, env_file_encoding='utf-8', validate_default=False, extra="ignore",
-    )
+    model_config = settings_config_dict
 
     host: str = Field(validation_alias="REDIS_HOST")
     port: str = Field(validation_alias="REDIS_PORT")
 
 
 class PostgresSettings(BaseSettings):
-    model_config = SettingsConfigDict(
-        env_file=ENV_PATH, env_file_encoding='utf-8', validate_default=False, extra="ignore",
-    )
+    model_config = settings_config_dict
 
     user: str = Field(validation_alias="POSTGRES_USER")
     password: str = Field(validation_alias="POSTGRES_PASSWORD")
