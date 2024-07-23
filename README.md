@@ -9,7 +9,7 @@
 ### Installing
 Before starting, make sure you have the latest versions of Docker installed.
 
-Run the following commands to pull this repo from github and get to src folder:
+Run the following commands to pull this repo from GitHub and get to src folder:
 ```
 git clone https://github.com/wnkbll/fastapi-backend.git
 cd fastapi-backend
