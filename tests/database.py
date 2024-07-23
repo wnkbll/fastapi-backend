@@ -1,20 +1,21 @@
 import asyncio
 from datetime import datetime
 
-from depricated.src.core import EnvironmentTypes
-from depricated.src.db import get_postgres_connection
-from depricated.src.db import TasksRepository
-from depricated.src.db import UsersRepository
-from src.models.schemas.tasks import TaskInCreate, TaskInUpdate
-from src.models.schemas.users import UserInCreate, UserInUpdate
+from src.api.dependencies import get_async_session_factory
+from src.db.db_postgres import initialize_database
+from src.db.repositories.tasks import TasksRepository
+from src.db.repositories.users import UsersRepository
+from src.models.tasks import TaskInCreate, TaskInUpdate
+from src.models.users import UserInCreate, UserInUpdate
 
 
 async def main() -> None:
-    db_connection = get_postgres_connection(EnvironmentTypes.test)
-    await db_connection.init_db()
+    await initialize_database()
 
-    users_repo = UsersRepository(db_connection.session_factory)
-    task_repo = TasksRepository(db_connection.session_factory)
+    async_session_factory = get_async_session_factory()
+
+    users_repo = UsersRepository(async_session_factory)
+    task_repo = TasksRepository(async_session_factory)
 
     user1 = UserInCreate(username="Bob", email="some.address1@gmail.com", password="123456")
     user2 = UserInCreate(username="Man", email="some.address2@gmail.com", password="123456")
