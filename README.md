@@ -47,7 +47,7 @@ docker compose up
 ├───src
 │   ├───api
 │   │   ├───dependencies.py     # FastAPI dependency injection 
-│   │   └───routes              # endpoint definintions
+│   │   └───routes              # FastAPI endpoints
 │   ├───core                    # settings, paths
 │   ├───db
 │   │   ├───tables.py           # SQLAlchemy models
