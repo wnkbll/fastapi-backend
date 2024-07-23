@@ -3,7 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, HTTPException, status, Body
 
 from src.api.dependencies import TasksRepositoryDepends
-from depricated.src.db.errors import EntityDoesNotExistError
+from src.db.errors import EntityDoesNotExistError
 from src.models.tasks import TaskInResponse, TasksInResponse, TaskInCreate, TaskInUpdate
 
 router = APIRouter()
