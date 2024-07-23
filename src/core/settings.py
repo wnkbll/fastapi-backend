@@ -24,11 +24,11 @@ class RedisSettings(BaseSettings):
 class PostgresSettings(BaseSettings):
     model_config = settings_config_dict
 
-    user: str = Field(validation_alias="POSTGRES_USER")
-    password: str = Field(validation_alias="POSTGRES_PASSWORD")
-    host: str = Field(validation_alias="POSTGRES_HOST")
-    port: str = Field(validation_alias="POSTGRES_PORT")
-    name: str = Field(validation_alias="POSTGRES_NAME")
+    user: str = Field(validation_alias="DB_USER")
+    password: str = Field(validation_alias="DB_PASS")
+    host: str = Field(validation_alias="DB_HOST")
+    port: str = Field(validation_alias="DB_PORT")
+    name: str = Field(validation_alias="DB_NAME")
 
 
 class FastAPISettings(BaseModel):
