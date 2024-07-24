@@ -50,7 +50,9 @@ class TasksRepository(Repository):
         query: Executable = (
             select(UsersTable).filter_by(username=username).options(selectinload(UsersTable.tasks))
             if not username_is_none else
-            select(TasksTable).where(TasksTable.deadline - datetime.now(UTC) <= timedelta(days=3))
+            select(TasksTable).where(
+                TasksTable.deadline - datetime.now(UTC) <= timedelta(days=3), TasksTable.deadline > datetime.now(UTC)
+            )
             if sort_by_deadline else
             select(TasksTable)
         )

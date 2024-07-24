@@ -3,6 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, HTTPException, status, Body
 
 from src.api.dependencies import TasksRepositoryDepends
+from src.db import db_redis as redis
 from src.db.errors import EntityDoesNotExistError
 from src.models.tasks import TaskInResponse, TasksInResponse, TaskInCreate, TaskInUpdate
 
@@ -49,6 +50,32 @@ async def get_all_tasks_by_username(
     )
 
 
+@router.get(
+    "/some-string/{id_}", name="tasks:get-task-by-id", response_model=TaskInResponse
+)
+async def get_task_by_id(
+        id_: int, tasks_repo: TasksRepositoryDepends
+) -> TaskInResponse:
+    task = await redis.get_task(id_)
+
+    if task is not None:
+        return TaskInResponse(
+            task=task
+        )
+
+    try:
+        task = await tasks_repo.get(id_=id_)
+    except EntityDoesNotExistError as existence_error:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"There is no tasks with this id:{id_}",
+        ) from existence_error
+
+    return TaskInResponse(
+        task=task
+    )
+
+
 @router.post(
     "", name="tasks:create-task", response_model=TaskInResponse
 )
@@ -70,7 +97,7 @@ async def create_task(
 
 
 @router.put(
-    "/{id}", name="task:update-task", response_model=TaskInResponse
+    "/{id_}", name="task:update-task", response_model=TaskInResponse
 )
 async def update_task(
         id_: int,
@@ -91,7 +118,7 @@ async def update_task(
 
 
 @router.delete(
-    "/{id}", name="task:delete-task", response_model=TaskInResponse
+    "/{id_}", name="task:delete-task", response_model=TaskInResponse
 )
 async def delete_task(
         id_: int,

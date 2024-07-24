@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field, PostgresDsn, RedisDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from src.core.paths import PROD_ENV_PATH as ENV_PATH
+from src.core.paths import DEV_ENV_PATH as ENV_PATH
 
 settings_config_dict = SettingsConfigDict(
     env_file=ENV_PATH, env_file_encoding='utf-8', validate_default=False, extra="ignore",
