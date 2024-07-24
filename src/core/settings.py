@@ -83,3 +83,7 @@ class Settings(BaseModel):
     @property
     def fastapi_kwargs(self) -> dict[str, any]:
         return self.fastapi.model_dump()
+
+    @property
+    def middleware_kwargs(self) -> dict[str, any]:
+        return self.middleware.model_dump()

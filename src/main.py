@@ -48,10 +48,7 @@ def get_application() -> FastAPI:
 
     application.add_middleware(
         CORSMiddleware,
-        allow_origins=settings.middleware.allow_origins,
-        allow_credentials=settings.middleware.allow_credentials,
-        allow_methods=settings.middleware.allow_methods,
-        allow_headers=settings.middleware.allow_headers,
+        **settings.middleware_kwargs,
     )
 
     return application
