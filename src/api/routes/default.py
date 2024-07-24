@@ -6,12 +6,12 @@ from src.core.config import get_app_settings
 router = APIRouter()
 
 
-@router.get("/")
+@router.get("/", name="default:root")
 async def root():
     return {"message": "OK"}
 
 
-@router.get("/settings")
+@router.get("/settings", name="default:settings")
 async def get_app_info():
     settings = get_app_settings()
     info = {
@@ -24,7 +24,7 @@ async def get_app_info():
     return info
 
 
-@router.get("/logger")
+@router.get("/logger", name="default:logger")
 async def logger_test():
     logger.trace("This is logger.trace call")
     logger.debug("This is logger.debug call")

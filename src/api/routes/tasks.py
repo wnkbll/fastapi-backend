@@ -72,6 +72,8 @@ async def create_task(
             detail="Invalid username",
         ) from existence_error
 
+    await redis.set_tasks()
+
     return TaskInResponse(
         task=task
     )
@@ -93,6 +95,8 @@ async def update_task(
             detail="Invalid id",
         ) from existence_error
 
+    await redis.set_tasks()
+
     return TaskInResponse(
         task=task
     )
@@ -112,6 +116,8 @@ async def delete_task(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Invalid id",
         ) from existence_error
+
+    await redis.set_tasks()
 
     return TaskInResponse(
         task=task
