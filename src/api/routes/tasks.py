@@ -13,11 +13,12 @@ router = APIRouter()
 @router.get(
     "", name="tasks:get-all-tasks", response_model=TasksInResponse
 )
-async def get_all_tasks_(
-        tasks_repo: TasksRepositoryDepends
+async def get_all_tasks(
+        tasks_repo: TasksRepositoryDepends,
+        username: str | None = None,
 ) -> TasksInResponse:
     try:
-        tasks = await tasks_repo.get_all()
+        tasks = await tasks_repo.get_all(username=username) if username else await tasks_repo.get_all()
     except EntityDoesNotExistError as existence_error:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -31,27 +32,7 @@ async def get_all_tasks_(
 
 
 @router.get(
-    "/{username}", name="tasks:get-all-tasks-by-username", response_model=TasksInResponse
-)
-async def get_all_tasks_by_username(
-        username: str, tasks_repo: TasksRepositoryDepends
-) -> TasksInResponse:
-    try:
-        tasks = await tasks_repo.get_all(username=username)
-    except EntityDoesNotExistError as existence_error:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Invalid username",
-        ) from existence_error
-
-    return TasksInResponse(
-        tasks=tasks,
-        count=len(tasks),
-    )
-
-
-@router.get(
-    "/some-string/{id_}", name="tasks:get-task-by-id", response_model=TaskInResponse
+    "/{id_}", name="tasks:get-task-by-id", response_model=TaskInResponse
 )
 async def get_task_by_id(
         id_: int, tasks_repo: TasksRepositoryDepends

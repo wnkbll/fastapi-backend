@@ -70,5 +70,3 @@ async def http_exception_handler(
         _: Request, exc: RequestValidationError | ValidationError
 ) -> JSONResponse:
     return JSONResponse({"errors": [exc.errors()]}, status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
-
-# TODO: Куда сохраняются данные бд
