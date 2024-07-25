@@ -41,6 +41,8 @@ async def login(
         user=UserWithToken(
             username=user_in_db.username,
             email=user_in_db.email,
+            created_at=user_in_db.created_at,
+            updated_at=user_in_db.updated_at,
             token=token,
         ),
     )
@@ -74,6 +76,8 @@ async def register(
         user=UserWithToken(
             username=user_in_db.username,
             email=user_in_db.email,
+            created_at=user_in_db.created_at,
+            updated_at=user_in_db.updated_at,
             token=token,
         ),
     )

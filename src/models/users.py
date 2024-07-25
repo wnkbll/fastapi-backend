@@ -1,10 +1,10 @@
 from pydantic import BaseModel, EmailStr
 
-from src.models.base import IDModelMixin
+from src.models.base import IDModelMixin, TimestampsModelMixin
 from src.services import security
 
 
-class User(BaseModel):
+class User(TimestampsModelMixin):
     username: str
     email: EmailStr
 

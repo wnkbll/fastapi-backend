@@ -2,17 +2,15 @@ from datetime import datetime
 
 from pydantic import BaseModel
 
-from src.models.base import IDModelMixin
+from src.models.base import IDModelMixin, TimestampsModelMixin
 
 
-class Task(IDModelMixin):
+class Task(IDModelMixin, TimestampsModelMixin):
     title: str
     description: str
     body: str
     deadline: datetime
     is_complete: bool
-    created_at: datetime
-    updated_at: datetime
     user_id: int
 
 
