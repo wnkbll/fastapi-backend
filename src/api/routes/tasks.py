@@ -18,7 +18,7 @@ async def get_all_tasks(
         username: str | None = None,
 ) -> TasksInResponse:
     try:
-        tasks = await tasks_repo.get_all(username=username) if username else await tasks_repo.get_all()
+        tasks = await TasksService.get_all_tasks(tasks_repo=tasks_repo, username=username)
     except EntityDoesNotExistError as existence_error:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -58,14 +58,12 @@ async def create_task(
         task_in_create: Annotated[TaskInCreate, Body(alias="task-in-create")],
 ) -> TaskInResponse:
     try:
-        task = await tasks_repo.create(task_in_create=task_in_create)
+        task = await TasksService.create_task(tasks_repo=tasks_repo, task_in_create=task_in_create)
     except EntityDoesNotExistError as existence_error:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Invalid username",
         ) from existence_error
-
-    await TasksService.cache_tasks()
 
     return TaskInResponse(
         task=task
@@ -81,14 +79,12 @@ async def update_task(
         task_in_update: Annotated[TaskInUpdate, Body(alias="task-in-update")],
 ) -> TaskInResponse:
     try:
-        task = await tasks_repo.update(id_=id_, task_in_update=task_in_update)
+        task = await TasksService.update_task(tasks_repo=tasks_repo, id_=id_, task_in_update=task_in_update)
     except EntityDoesNotExistError as existence_error:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Invalid id",
         ) from existence_error
-
-    await TasksService.cache_tasks()
 
     return TaskInResponse(
         task=task
@@ -103,14 +99,12 @@ async def delete_task(
         tasks_repo: TasksRepositoryDepends,
 ) -> TaskInResponse:
     try:
-        task = await tasks_repo.delete(id_=id_)
+        task = await TasksService.delete_task(tasks_repo=tasks_repo, id_=id_)
     except EntityDoesNotExistError as existence_error:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Invalid id",
         ) from existence_error
-
-    await TasksService.cache_tasks()
 
     return TaskInResponse(
         task=task

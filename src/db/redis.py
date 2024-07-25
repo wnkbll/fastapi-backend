@@ -16,6 +16,8 @@ class Redis:
         async with redis.client() as connection:
             await connection.set(key, value)
 
+        logger.info(f"Key {key} was set")
+
     @staticmethod
     async def get(*, key: KeyType) -> ValueType:
         settings = get_app_settings()
@@ -23,6 +25,8 @@ class Redis:
 
         async with redis.client() as connection:
             encoded = await connection.get(key)
+
+        logger.info(f"Key {key} was read")
 
         return encoded
 
@@ -32,9 +36,17 @@ class Redis:
         redis = aioredis.from_url(settings.redis_dsn)
 
         async with redis.client() as connection:
-            deleted = await connection.delete(key)
+            await connection.delete(key)
 
-        print(deleted)
+        logger.info(f"Key {key} was deleted")
+
+    @staticmethod
+    async def exists(*, key: KeyType) -> bool:
+        settings = get_app_settings()
+        redis = aioredis.from_url(settings.redis_dsn)
+
+        async with redis.client() as connection:
+            return bool(await connection.exists(key))
 
     @staticmethod
     async def flush_all() -> None:
