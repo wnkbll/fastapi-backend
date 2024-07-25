@@ -3,9 +3,9 @@ from typing import Annotated
 from fastapi import APIRouter, HTTPException, status, Body
 
 from src.api.dependencies import TasksRepositoryDepends
-from src.db import db_redis as redis
 from src.db.errors import EntityDoesNotExistError
 from src.models.tasks import TaskInResponse, TasksInResponse, TaskInCreate, TaskInUpdate
+from src.services.tasks import TasksService
 
 router = APIRouter()
 
@@ -37,15 +37,8 @@ async def get_all_tasks(
 async def get_task_by_id(
         id_: int, tasks_repo: TasksRepositoryDepends
 ) -> TaskInResponse:
-    task = await redis.get_task(id_)
-
-    if task is not None:
-        return TaskInResponse(
-            task=task
-        )
-
     try:
-        task = await tasks_repo.get(id_=id_)
+        task = await TasksService.get_task_by_id(tasks_repo=tasks_repo, id_=id_)
     except EntityDoesNotExistError as existence_error:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -72,7 +65,7 @@ async def create_task(
             detail="Invalid username",
         ) from existence_error
 
-    await redis.set_tasks()
+    await TasksService.cache_tasks()
 
     return TaskInResponse(
         task=task
@@ -95,7 +88,7 @@ async def update_task(
             detail="Invalid id",
         ) from existence_error
 
-    await redis.set_tasks()
+    await TasksService.cache_tasks()
 
     return TaskInResponse(
         task=task
@@ -117,7 +110,7 @@ async def delete_task(
             detail="Invalid id",
         ) from existence_error
 
-    await redis.set_tasks()
+    await TasksService.cache_tasks()
 
     return TaskInResponse(
         task=task

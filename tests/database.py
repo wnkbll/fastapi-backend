@@ -2,7 +2,7 @@ import asyncio
 from datetime import datetime
 
 from src.api.dependencies import get_async_session_factory
-from src.db.db_postgres import initialize_database
+from src.db.postgres import Postgres
 from src.db.repositories.tasks import TasksRepository
 from src.db.repositories.users import UsersRepository
 from src.models.tasks import TaskInCreate, TaskInUpdate
@@ -10,7 +10,7 @@ from src.models.users import UserInCreate, UserInUpdate
 
 
 async def main() -> None:
-    await initialize_database()
+    await Postgres.initialize_database()
 
     async_session_factory = get_async_session_factory()
 

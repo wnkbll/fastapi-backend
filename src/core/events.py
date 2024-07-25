@@ -1,11 +1,12 @@
-from src.db import db_postgres as postgres
-from src.db import db_redis as redis
+from src.db.postgres import Postgres
+from src.db.redis import Redis
+from src.services.tasks import TasksService
 
 
 async def create_start_app_handler() -> None:
-    await postgres.initialize_database()
-    await redis.set_tasks()
+    await Postgres.initialize_database()
+    await TasksService.cache_tasks()
 
 
 async def create_stop_app_handler() -> None:
-    await redis.flush_all()
+    await Redis.flush_all()
