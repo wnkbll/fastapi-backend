@@ -43,6 +43,7 @@ docker compose up
 
 ### Project Structure
 ```bash
+├───resources                   # related with project docs, diagrams, etc.
 ├───scripts                     # bash scripts for docker
 ├───src
 │   ├───api
