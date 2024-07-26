@@ -29,9 +29,9 @@ class UserInCreate(UserInLogin):
 
 
 class UserInUpdate(BaseModel):
-    username: str | None
-    email: EmailStr | None
-    password: str | None
+    username: str | None = None
+    email: EmailStr | None = None
+    password: str | None = None
 
 
 class UserWithToken(User):
